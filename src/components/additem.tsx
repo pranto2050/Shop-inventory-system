@@ -59,13 +59,13 @@ const AddItem: React.FC = () => {
   };
 
   return (
-    <div className="p-4 border rounded shadow-md max-w-2xl mx-auto">
-      <h2 className="text-lg font-bold mb-4">Add Category Item</h2>
-      <form onSubmit={handleAddItem} className="space-y-4 mb-8">
+    <div className="max-w-2xl mx-auto bg-slate-900/70 backdrop-blur-xl border border-slate-700/40 rounded-3xl shadow-2xl p-8 mt-10">
+      <h2 className="text-2xl font-bold text-white text-center mb-6">Add Category Item</h2>
+      <form onSubmit={handleAddItem} className="space-y-6 mb-10">
         <div>
-          <label className="block mb-1">Select Category</label>
+          <label className="block text-slate-400 text-sm mb-2">Select Category</label>
           <select
-            className="w-full border px-2 py-1 rounded"
+            className="w-full px-4 py-3 bg-slate-800/60 border border-slate-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 transition-all hover:bg-slate-800/80"
             value={selectedCategoryId}
             onChange={e => setSelectedCategoryId(e.target.value)}
           >
@@ -76,10 +76,10 @@ const AddItem: React.FC = () => {
           </select>
         </div>
         <div>
-          <label className="block mb-1">New Item Name</label>
+          <label className="block text-slate-400 text-sm mb-2">New Item Name</label>
           <input
             type="text"
-            className="w-full border px-2 py-1 rounded"
+            className="w-full px-4 py-3 bg-slate-800/60 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 transition-all hover:bg-slate-800/80"
             value={newItemName}
             onChange={e => setNewItemName(e.target.value)}
             placeholder="Enter item name"
@@ -87,7 +87,7 @@ const AddItem: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="w-full py-3 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold rounded-xl transition-all duration-300 hover:scale-[1.03] shadow-lg hover:shadow-orange-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={loading}
         >
           {loading ? 'Saving...' : 'Save'}
@@ -96,16 +96,16 @@ const AddItem: React.FC = () => {
       </form>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {categories.map(cat => (
-          <div key={cat.id} className="border rounded-lg p-4 bg-white/20 shadow">
-            <h3 className="text-xl font-bold mb-2">{cat.name}</h3>
+          <div key={cat.id} className="border border-slate-700/40 rounded-2xl p-4 bg-slate-800/40 backdrop-blur-lg shadow-lg">
+            <h3 className="text-xl font-bold text-white mb-2">{cat.name}</h3>
             <ul className="list-disc pl-6 mb-2">
               {cat.items && cat.items.length > 0 ? (
-                cat.items.map((item, idx) => <li key={idx}>{item}</li>)
+                cat.items.map((item, idx) => <li key={idx} className="text-white/90">{item}</li>)
               ) : (
                 <li className="text-slate-400">No items yet</li>
               )}
             </ul>
-            <p className="text-sm text-slate-500">{cat.description}</p>
+            <p className="text-sm text-slate-400">{cat.description}</p>
           </div>
         ))}
       </div>
