@@ -1,11 +1,1 @@
-[
-  {
-    "name": "Santo",
-    "email": "s@gmail.com",
-    "password": "s",
-    "role": "customer",
-    "points": 0,
-    "purchaseHistory": [],
-    "id": "user-1752673251369"
-  }
-]
+[]

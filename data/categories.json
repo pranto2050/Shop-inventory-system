@@ -3,15 +3,7 @@
     "id": "cat-1",
     "name": "Network",
     "description": "Networking equipment and devices",
-    "createdDate": "2024-01-01",
-    "subcategories": [
-      {
-        "id": "cat-1-1",
-        "name": "Storage",
-        "description": "Network Storage Devices",
-        "createdDate": "2024-01-01"
-      }
-    ]
+    "createdDate": "2024-01-01"
   },
   {
     "id": "cat-1752635116312",
@@ -20,9 +12,45 @@
     "createdDate": "2025-07-16"
   },
   {
-    "id": "cat-1752635584167",
-    "name": "Accessories",
+    "id": "cat-1752635584167-1",
+    "name": "HDD",
     "description": "Internet installation accessories",
     "createdDate": "2025-07-16"
+  },
+  {
+    "id": "cat-1752840121527",
+    "name": "Irfan",
+    "description": "Lover",
+    "createdDate": "2025-07-18"
+  },
+  {
+    "id": "cat-1752842305316",
+    "name": "d",
+    "description": "sdf",
+    "createdDate": "2025-07-18"
+  },
+  {
+    "id": "cat-1752842612367",
+    "name": "sd",
+    "description": "",
+    "createdDate": "2025-07-18"
+  },
+  {
+    "id": "cat-1752842623135",
+    "name": "sadd",
+    "description": "",
+    "createdDate": "2025-07-18"
+  },
+  {
+    "id": "cat-1753007850101",
+    "name": "sad",
+    "description": "asdas",
+    "createdDate": "2025-07-20"
+  },
+  {
+    "id": "cat-1753007871306",
+    "name": "NNNNNNN",
+    "description": "",
+    "createdDate": "2025-07-20"
   }
 ]

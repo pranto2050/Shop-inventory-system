@@ -1,32 +1,8 @@
 [
   {
-    "id": "brand-1752642416377",
-    "name": "Asus",
-    "description": "This is the global brand",
-    "logoUrl": "",
-    "logoFile": "",
-    "createdDate": "2025-07-16"
-  },
-  {
-    "id": "brand-1752642416378",
-    "name": "TP-Link",
-    "description": "TP-Link is a global provider of networking and smart home products, founded in 1996",
-    "logoUrl": "https://w7.pngwing.com/pngs/347/185/png-transparent-tplink-2-hd-logo-thumbnail.png",
-    "logoFile": "",
-    "createdDate": "2025-07-16"
-  },
-  {
     "id": "brand-1752642416379",
     "name": "Netgear",
     "description": "Known for high-performance routers and modems",
-    "logoUrl": "",
-    "logoFile": "",
-    "createdDate": "2025-07-16"
-  },
-  {
-    "id": "brand-1752642416380",
-    "name": "D-Link",
-    "description": "Offers a range of routers for home and business",
     "logoUrl": "",
     "logoFile": "",
     "createdDate": "2025-07-16"

@@ -12,7 +12,7 @@
     "name": "Md.Prannto Islam",
     "email": "pranto@gmail.com",
     "password": "pranto",
-    "role": "admin",
+    "role": "customer",
     "points": 0,
     "purchaseHistory": [],
     "id": "admin-1752645271660"
@@ -21,9 +21,18 @@
     "name": "Sanzit",
     "email": "sanzit@gmail.com",
     "password": "s",
-    "role": "seller",
+    "role": "customer",
     "points": 0,
     "purchaseHistory": [],
     "id": "admin-1752673287648"
+  },
+  {
+    "name": "AAAA",
+    "email": "s@gmail.com",
+    "password": "s",
+    "role": "admin",
+    "points": 0,
+    "purchaseHistory": [],
+    "id": "admin-1753007998599"
   }
 ]
