@@ -3,12 +3,16 @@ const cors = require('cors');
 const fs = require('fs-extra');
 const path = require('path');
 
+const bodyParser = require('body-parser');
+
 const app = express();
 const PORT = 3001;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'data')));
 
 // Data directory
 const DATA_DIR = path.join(__dirname, 'data');
@@ -28,6 +32,17 @@ const FILES = {
   returns: path.join(DATA_DIR, 'returns.json'),
   warranties: path.join(DATA_DIR, 'warranty-approvals.json')
 };
+
+// POST categories (overwrite with new data)
+app.post('/api/categories', async (req, res) => {
+  const newCategories = req.body;
+  try {
+    await fs.writeFile(FILES.categories, JSON.stringify(newCategories, null, 2));
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to save categories.' });
+  }
+});
 
 // Ensure sales and warranty subdirectories exist
 const SALES_DIR = path.join(DATA_DIR, 'sales');

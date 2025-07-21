@@ -63,6 +63,7 @@ import PurchaseQuantityModal from './PurchaseQuantityModal';
 import WarrantyManagement from './WarrantyManagement';
 import BrandManagement from './BrandManagement';
 import SaleDetailModal from './SaleDetailModal';
+import AddItem from './additem';
 
 interface AdminDashboardProps {
   user: UserType;
@@ -1491,10 +1492,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
         {activeTab === 'basket' && (
           <div className="space-y-8">
             <h2 className="text-2xl font-bold text-white mb-4">Basket (Admin Cart)</h2>
-            <div className="bg-white/10 backdrop-blur-xl border border-cyan-500/20 rounded-xl p-12 text-center shadow-lg shadow-cyan-500/10">
-              <ShoppingBag className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-              <h3 className="text-white text-xl font-bold mb-2">Basket functionality coming soon!</h3>
-              <p className="text-slate-400 text-lg mb-6">This section will allow admins to manage a cart for bulk actions or view all user baskets.</p>
+            <div className="bg-white/10 backdrop-blur-xl border border-cyan-500/20 rounded-xl p-12 shadow-lg shadow-cyan-500/10">
+              {/* AddItem component for category input/output */}
+              <div className="mb-8">
+                <p className="text-slate-300 text-lg mb-4">Add or select a category for admin actions below:</p>
+                <div className="max-w-lg mx-auto">
+                  {/* Import AddItem at the top of this file */}
+                  <AddItem />
+                </div>
+              </div>
             </div>
           </div>
         )}
