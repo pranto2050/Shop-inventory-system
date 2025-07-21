@@ -190,11 +190,14 @@ export interface Brand {
   createdDate: string;
 }
 
+// ...existing code...
 export interface AdminPurchaseItem {
   product: Product;
   quantity: number;
   totalCost: number;
+  customPrice?: number;
 }
+// ...existing code...
 
 export interface PriceFilter {
   min: number;

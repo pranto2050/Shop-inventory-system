@@ -71,6 +71,9 @@ interface AdminDashboardProps {
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
+  // Purchase History filter states
+  const [purchaseHistoryMonth, setPurchaseHistoryMonth] = useState('');
+  const [purchaseHistoryDate, setPurchaseHistoryDate] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -82,6 +85,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
   const [sortBy, setSortBy] = useState('');
   const [showSalesModal, setShowSalesModal] = useState(false);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [showPurchaseHistoryModal, setShowPurchaseHistoryModal] = useState(false);
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [showReceiptModal, setShowReceiptModal] = useState(false);
   const [showProductDetailModal, setShowProductDetailModal] = useState(false);
@@ -590,6 +594,120 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-20 pb-8">
       <div className="container mx-auto px-4">
+        {/* Purchase History Modal */}
+        {showPurchaseHistoryModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+            <div className="bg-white/10 backdrop-blur-xl border border-cyan-500/20 rounded-2xl p-8 shadow-lg shadow-cyan-500/10 max-w-5xl w-full overflow-x-auto relative">
+              <button
+                onClick={() => setShowPurchaseHistoryModal(false)}
+                className="absolute top-4 right-4 p-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-lg border border-red-500/30 transition-all duration-300"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <h2 className="text-2xl font-bold text-white mb-6">Purchase History</h2>
+              {/* Filter Controls */}
+              <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6 gap-4">
+                <div className="flex flex-col">
+                  <label className="text-slate-300 text-sm mb-1">Select Month (shows purchases from <span className="font-semibold">{purchaseHistoryMonth ? `${purchaseHistoryMonth}-01` : 'start'}</span> to <span className="font-semibold">{purchaseHistoryMonth ? (() => { const [y,m] = purchaseHistoryMonth.split('-'); return new Date(Number(y), Number(m), 0).toISOString().slice(0,10); })() : 'end'}</span>)</label>
+                  <input
+                    type="month"
+                    value={purchaseHistoryMonth}
+                    onChange={e => setPurchaseHistoryMonth(e.target.value)}
+                    className="px-4 py-2 rounded-lg bg-slate-800 text-white border border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                    placeholder="Select month"
+                  />
+                </div>
+                <input
+                  type="date"
+                  value={purchaseHistoryDate}
+                  onChange={e => setPurchaseHistoryDate(e.target.value)}
+                  className="px-4 py-2 rounded-lg bg-slate-800 text-white border border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                  placeholder="Select date"
+                />
+                <button
+                  onClick={() => { setPurchaseHistoryMonth(''); setPurchaseHistoryDate(''); }}
+                  className="px-4 py-2 rounded-lg bg-cyan-500 text-slate-900 font-semibold hover:bg-cyan-600 transition-all"
+                >
+                  Clear Filter
+                </button>
+              </div>
+              {/* Filtered Data Calculation */}
+              {(() => {
+                let filteredPurchases = purchases;
+                if (purchaseHistoryMonth) {
+                  filteredPurchases = filteredPurchases.filter(p => {
+                    const d = new Date(p.timestamp);
+                    const monthStr = d.toISOString().slice(0,7); // yyyy-mm
+                    return monthStr === purchaseHistoryMonth;
+                  });
+                }
+                if (purchaseHistoryDate) {
+                  filteredPurchases = filteredPurchases.filter(p => {
+                    const d = new Date(p.timestamp);
+                    const dateStr = d.toISOString().slice(0,10); // yyyy-mm-dd
+                    return dateStr === purchaseHistoryDate;
+                  });
+                }
+                const totalProducts = purchases.length;
+                const totalQuantity = purchases.reduce((sum, p) => sum + p.quantityAdded, 0);
+                const totalCost = purchases.reduce((sum, p) => sum + p.totalCost, 0);
+                const monthQuantity = filteredPurchases.reduce((sum, p) => sum + p.quantityAdded, 0);
+                const monthCost = filteredPurchases.reduce((sum, p) => sum + p.totalCost, 0);
+                return (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                      <div className="bg-slate-800/30 rounded-xl p-4 text-center">
+                        <p className="text-slate-400 text-sm">Total Purchases</p>
+                        <p className="text-2xl font-bold text-white">{totalProducts}</p>
+                      </div>
+                      <div className="bg-slate-800/30 rounded-xl p-4 text-center">
+                        <p className="text-slate-400 text-sm">Total Quantity</p>
+                        <p className="text-2xl font-bold text-cyan-400">{totalQuantity}</p>
+                      </div>
+                      <div className="bg-slate-800/30 rounded-xl p-4 text-center">
+                        <p className="text-slate-400 text-sm">Total Cost</p>
+                        <p className="text-2xl font-bold text-green-400">৳{totalCost.toLocaleString()}</p>
+                      </div>
+                      <div className="bg-slate-800/30 rounded-xl p-4 text-center">
+                        <p className="text-slate-400 text-sm">Filtered Quantity</p>
+                        <p className="text-2xl font-bold text-purple-400">{monthQuantity}</p>
+                        <p className="text-slate-400 text-xs">Filtered Cost: <span className="text-green-400">৳{monthCost.toLocaleString()}</span></p>
+                      </div>
+                    </div>
+                    <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-cyan-400 scrollbar-track-slate-800">
+                      <table className="min-w-[1200px] w-full">
+                        <thead>
+                          <tr className="border-b border-slate-700">
+                            <th className="text-left text-slate-400 font-medium py-3 px-6">Product Name</th>
+                            <th className="text-left text-slate-400 font-medium py-3 px-6">Product ID</th>
+                            <th className="text-left text-slate-400 font-medium py-3 px-6">Common ID</th>
+                            <th className="text-left text-slate-400 font-medium py-3 px-6">Quantity</th>
+                            <th className="text-left text-slate-400 font-medium py-3 px-6">Price</th>
+                            <th className="text-left text-slate-400 font-medium py-3 px-6">Total Cost</th>
+                            <th className="text-left text-slate-400 font-medium py-3 px-6">Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredPurchases.map((purchase, idx) => (
+                            <tr key={idx} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
+                              <td className="py-4 px-6 text-white whitespace-nowrap">{purchase.productName}</td>
+                              <td className="py-4 px-6 text-cyan-400 font-mono text-sm whitespace-nowrap">{purchase.productID}</td>
+                              <td className="py-4 px-6 text-purple-400 font-mono text-sm whitespace-nowrap">{purchase.commonId || '-'}</td>
+                              <td className="py-4 px-6 text-white whitespace-nowrap">{purchase.quantityAdded}</td>
+                              <td className="py-4 px-6 text-green-400 whitespace-nowrap">৳{purchase.pricePerUnit}</td>
+                              <td className="py-4 px-6 text-green-400 font-bold whitespace-nowrap">৳{purchase.totalCost}</td>
+                              <td className="py-4 px-6 text-slate-300 whitespace-nowrap">{new Date(purchase.timestamp).toLocaleDateString()}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+        )}
         {notification && (
           <div className="fixed top-24 right-4 bg-green-500/90 backdrop-blur-sm text-white px-6 py-3 rounded-lg shadow-lg z-50 border border-green-400/30">
             {notification}
@@ -1207,29 +1325,53 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           </div>
         )}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
         {/* Other tabs content would go here... */}
         {activeTab === 'purchases' && (
           <div>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
-              <h2 className="text-2xl font-bold text-white">Purchase Management</h2>
-              {purchaseItems.length > 0 && (
-                <div className="flex space-x-4">
+              <div className="flex items-center justify-between w-full">
+                <h2 className="text-2xl font-bold text-white">Purchase Management</h2>
+                <div className="flex items-center space-x-4">
                   <button
-                    onClick={() => setPurchaseItems([])}
-                    className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-red-500/25"
+                    onClick={() => setShowPurchaseHistoryModal(true)}
+                    className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-slate-900 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-cyan-500/25"
                   >
-                    <X className="w-5 h-5" />
-                    <span>Clear Cart</span>
+                    <Package className="w-5 h-5" />
+                    <span>Purchase History</span>
                   </button>
-                  <button
-                    onClick={() => setShowPurchaseModal(true)}
-                    className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-slate-900 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-green-500/25"
-                  >
-                    <ShoppingBag className="w-5 h-5" />
-                    <span>Confirm Purchase ({purchaseItems.length} items)</span>
-                  </button>
+                  {purchaseItems.length > 0 && (
+                    <>
+                      <button
+                        onClick={() => setPurchaseItems([])}
+                        className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-red-500/25"
+                      >
+                        <X className="w-5 h-5" />
+                        <span>Clear Cart</span>
+                      </button>
+                      <button
+                        onClick={() => setShowPurchaseModal(true)}
+                        className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-slate-900 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-green-500/25"
+                      >
+                        <ShoppingBag className="w-5 h-5" />
+                        <span>Confirm Purchase ({purchaseItems.length} items)</span>
+                      </button>
+                    </>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
 
             {/* Purchase Cart Items */}
