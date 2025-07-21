@@ -12,18 +12,42 @@ A comprehensive e-commerce platform for electronics retail with advanced invento
 
 ## 🏗️ Architecture & Technology
 
-### Frontend
-- **React 18** with TypeScript for type safety
-- **Vite** for fast development and building
-- **Tailwind CSS** for responsive, modern UI
-- **Lucide React** for consistent iconography
-- **jsPDF & html2canvas** for receipt generation
+# 🛒 Shop Inventory System
 
-### Backend
-- **Node.js/Express** server with RESTful API
-- **JSON file-based storage** system for data persistence
-- **Multer** for file upload handling
-- **CORS** enabled for cross-origin requests
+A full-stack inventory management system built with React, Tailwind CSS, and Node.js. Designed for small to medium businesses to track products, manage sales, and generate receipts efficiently.
+
+---
+
+## ✨ Features
+
+### ✅ Frontend
+- ⚛ **React 18 + TypeScript** – for a robust and scalable UI
+- ⚡ **Vite** – ultra-fast development and builds
+- 🎨 **Tailwind CSS** – modern, responsive design
+- 🧩 **Lucide React** – beautiful and consistent icons
+- 🧾 **jsPDF + html2canvas** – generate printable receipts
+
+### ✅ Backend
+- 🚀 **Node.js + Express** – RESTful API server
+- 💾 **JSON file-based storage** – simple, no-database persistence
+- 📁 **Multer** – for secure file uploads
+- 🌐 **CORS enabled** – supports frontend-backend integration
+
+---
+
+## 🚀 Getting Started
+
+### 📦 Frontend Setup / run
+
+```bash
+code run on your terminal
+npm install
+npm run dev
+
+### 📦 Backend Setup / run
+code run on your terminal
+node server.cjs
+
 
 ### Data Storage Structure
 ```
