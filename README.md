@@ -37,7 +37,7 @@ A full-stack inventory management system built with React, Tailwind CSS, and Nod
 
 ## 🚀 Getting Started
 
-### 📦 Frontend Setup / run
+### 📦 Frontend and Backend Setup / run
 
 ```bash
 code run on your terminal
