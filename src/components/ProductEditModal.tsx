@@ -60,10 +60,14 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
   const [routerBrand, setRouterBrand] = useState('');
 
   //  const networkItems = ['Router', 'Switch', 'ONU'];
-
-
   
-  const networkItems = ['Router', 'Switch', 'ONU'];
+// Dynamically get items for Network category from categories state
+const getNetworkItems = () => {
+  const networkCategory = categories.find(cat => cat.name === 'Network');
+  return networkCategory && Array.isArray(networkCategory.items)
+    ? networkCategory.items
+    : [];
+};
   // Helper function to auto-populate brand data from database
   const handleBrandSelection = (selectedBrandName: string) => {
     const selectedBrandData = brands.find(brand => brand.name === selectedBrandName);
@@ -421,7 +425,7 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
                         required
                       >
                         <option value="" className="bg-slate-800">Select Network Item</option>
-                        {networkItems.map(item => (
+                        {getNetworkItems().map((item: string) => (
                           <option key={item} value={item} className="bg-slate-800">{item}</option>
                         ))}
                       </select>
