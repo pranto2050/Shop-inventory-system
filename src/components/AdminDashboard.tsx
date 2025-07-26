@@ -166,7 +166,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
         getReturnLogs(),
         getSoldProducts()
       ]);
-      
+      console.log('Loaded products:', categoriesData);
       setProducts(productsData);
       setCategories(categoriesData);
       setSales(salesData);
@@ -180,6 +180,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
       setLoading(false);
     }
   };
+
 
   const loadBrands = async () => {
     try {
@@ -1564,7 +1565,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
         {activeTab === 'warranty' && (
           <WarrantyManagement user={user} />
         )}
-
+{/* categories */}
         {activeTab === 'categories' && (
           <div className="space-y-8">
             <h2 className="text-2xl font-bold text-white mb-4">Category Management</h2>
@@ -1605,7 +1606,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
               </button>
             </form>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {categories.map(category => (
+              {categories && categories?.map(category => (
                 <div key={category.id} className="bg-slate-800/30 rounded-xl p-4 flex items-center justify-between">
                   <div>
                     <h4 className="text-white font-semibold">{category.name}</h4>

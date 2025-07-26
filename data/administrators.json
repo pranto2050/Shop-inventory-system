@@ -16,23 +16,13 @@
     "points": 0,
     "purchaseHistory": [],
     "id": "admin-1752645271660"
-  },
-  {
-    "name": "Sanzit",
-    "email": "sanzit@gmail.com",
-    "password": "s",
-    "role": "customer",
-    "points": 0,
-    "purchaseHistory": [],
-    "id": "admin-1752673287648"
-  },
-  {
-    "name": "AAAA",
-    "email": "s@gmail.com",
-    "password": "s",
+  },{
+    "name": "admin",
+    "email": "admin@gmail.com",
+    "password": "admin",
     "role": "admin",
     "points": 0,
     "purchaseHistory": [],
-    "id": "admin-1753007998599"
+    "id": "admin-1752640309386"
   }
 ]
