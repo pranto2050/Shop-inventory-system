@@ -270,7 +270,7 @@ const TodaysSalesDashboard: React.FC<TodaysSalesDashboardProps> = ({
     }
     // Fallback to API
     try {
-      const response = await fetch('http://localhost:3001/api/soldproducts');
+      const response = await fetch('https://shop-inventory-api.onrender.com/api/soldproducts');
       if (!response.ok) throw new Error('Failed to fetch sales data');
       return await response.json();
     } catch (error) {

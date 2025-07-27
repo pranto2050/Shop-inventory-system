@@ -1,16 +1,9 @@
-
 [
   {
     "id": "1753126493397",
     "name": "Electronics",
     "description": "For electronic devices",
     "createdDate": "2025-07-22"
-  },
-  {
-    "id": "1753126493398",
-    "name": "Clothing",
-    "description": "For clothing items",
-    "createdDate": "2025-07-23"
   },
   {
     "id": "1753126493399",
@@ -23,11 +16,5 @@
     "name": "Books",
     "description": "For books and literature",
     "createdDate": "2025-07-25"
-  },
-  {
-  "id": "1753126493396",
-  "name": "Accessories",
-  "description": "For mobile phone",
-  "createdDate": "2025-07-21"
-}
+  }
 ]

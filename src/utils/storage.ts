@@ -223,7 +223,7 @@ export const downloadSalesData = async (): Promise<boolean> => {
 // Warranty Management
 export const saveSaleWithWarranty = async (saleData: any): Promise<{ success: boolean; saleId?: string; message?: string }> => {
   try {
-    const response = await fetch('http://localhost:3001/api/sales-with-warranty', {
+    const response = await fetch('https://shop-inventory-api.onrender.com/api/sales-with-warranty', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -241,7 +241,7 @@ export const saveSaleWithWarranty = async (saleData: any): Promise<{ success: bo
 
 export const searchWarrantyByProductId = async (productId: string): Promise<{ success: boolean; warranties?: any[]; message?: string }> => {
   try {
-    const response = await fetch(`http://localhost:3001/api/warranty/search/${productId}`);
+    const response = await fetch(`https://shop-inventory-api.onrender.com/api/warranty/search/${productId}`);
     const result = await response.json();
     return result;
   } catch (error) {
@@ -252,7 +252,7 @@ export const searchWarrantyByProductId = async (productId: string): Promise<{ su
 
 export const searchWarrantyByQuery = async (searchQuery: string): Promise<{ success: boolean; warranties?: any[]; message?: string }> => {
   try {
-    const response = await fetch(`http://localhost:3001/api/warranty/search/${encodeURIComponent(searchQuery)}`);
+    const response = await fetch(`https://shop-inventory-api.onrender.com/api/warranty/search/${encodeURIComponent(searchQuery)}`);
     const result = await response.json();
     return result;
   } catch (error) {
@@ -263,7 +263,7 @@ export const searchWarrantyByQuery = async (searchQuery: string): Promise<{ succ
 
 export const approveWarrantyClaim = async (approvalData: any): Promise<{ success: boolean; approvalId?: string; message?: string }> => {
   try {
-    const response = await fetch('http://localhost:3001/api/warranty/approve', {
+    const response = await fetch('https://shop-inventory-api.onrender.com/api/warranty/approve', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -281,7 +281,7 @@ export const approveWarrantyClaim = async (approvalData: any): Promise<{ success
 
 export const getWarrantyApprovals = async (): Promise<{ success: boolean; approvals?: any[]; message?: string }> => {
   try {
-    const response = await fetch('http://localhost:3001/api/warranty/approvals');
+    const response = await fetch('https://shop-inventory-api.onrender.com/api/warranty/approvals');
     const result = await response.json();
     return result;
   } catch (error) {
@@ -292,7 +292,7 @@ export const getWarrantyApprovals = async (): Promise<{ success: boolean; approv
 
 export const getDailySalesReport = async (date: string): Promise<{ success: boolean; sales?: any[]; date?: string; message?: string }> => {
   try {
-    const response = await fetch(`http://localhost:3001/api/sales/daily/${date}`);
+    const response = await fetch(`https://shop-inventory-api.onrender.com/api/sales/daily/${date}`);
     const result = await response.json();
     return result;
   } catch (error) {
@@ -304,7 +304,7 @@ export const getDailySalesReport = async (date: string): Promise<{ success: bool
 // Sold Products
 export const getSoldProducts = async (): Promise<any[]> => {
   try {
-    const response = await fetch('http://localhost:3001/api/soldproducts');
+    const response = await fetch('https://shop-inventory-api.onrender.com/api/soldproducts');
     const result = await response.json();
     return result.success ? result.soldProducts : [];
   } catch (error) {
@@ -316,7 +316,7 @@ export const getSoldProducts = async (): Promise<any[]> => {
 // Brands
 export const getBrands = async (): Promise<any[]> => {
   try {
-    const response = await fetch('http://localhost:3001/api/brands');
+    const response = await fetch('https://shop-inventory-api.onrender.com/api/brands');
     const brands = await response.json();
     return Array.isArray(brands) ? brands : [];
   } catch (error) {
@@ -327,7 +327,7 @@ export const getBrands = async (): Promise<any[]> => {
 
 export const addBrand = async (brand: any): Promise<boolean> => {
   try {
-    const response = await fetch('http://localhost:3001/api/brands', {
+    const response = await fetch('https://shop-inventory-api.onrender.com/api/brands', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -344,7 +344,7 @@ export const addBrand = async (brand: any): Promise<boolean> => {
 
 export const updateBrand = async (brandId: string, brand: any): Promise<boolean> => {
   try {
-    const response = await fetch(`http://localhost:3001/api/brands/${brandId}`, {
+    const response = await fetch(`https://shop-inventory-api.onrender.com/api/brands/${brandId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -361,7 +361,7 @@ export const updateBrand = async (brandId: string, brand: any): Promise<boolean>
 
 export const deleteBrand = async (brandId: string): Promise<boolean> => {
   try {
-    const response = await fetch(`http://localhost:3001/api/brands/${brandId}`, {
+    const response = await fetch(`https://shop-inventory-api.onrender.com/api/brands/${brandId}`, {
       method: 'DELETE'
     });
     const result = await response.json();

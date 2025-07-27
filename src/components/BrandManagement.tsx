@@ -141,7 +141,7 @@ const BrandManagement: React.FC<BrandManagementProps> = ({ onBrandsChange }) => 
         const formDataFile = new FormData();
         formDataFile.append('logo', selectedLogoFile);
         
-        const uploadResponse = await fetch('http://localhost:3001/api/upload/logo', {
+        const uploadResponse = await fetch('https://shop-inventory-api.onrender.com/api/upload/logo', {
           method: 'POST',
           body: formDataFile,
         });
@@ -198,7 +198,7 @@ const BrandManagement: React.FC<BrandManagementProps> = ({ onBrandsChange }) => 
     }
     if (brand.logoFile) {
       // Use the server URL for uploaded files
-      return `http://localhost:3001/uploads/logos/${brand.logoFile}`;
+      return `https://shop-inventory-api.onrender.com/uploads/logos/${brand.logoFile}`;
     }
     return null;
   };

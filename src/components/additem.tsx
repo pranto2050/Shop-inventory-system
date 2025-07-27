@@ -48,7 +48,7 @@ const AddItem: React.FC = () => {
           : cat
       );
       // Save to backend (uses correct server URL)
-      await axios.post('http://localhost:3001/api/categories', updatedCategories);
+      await axios.post('https://shop-inventory-api.onrender.com/api/categories', updatedCategories);
       setCategories(updatedCategories);
       setMessage('Item added successfully!');
       setNewItemName('');

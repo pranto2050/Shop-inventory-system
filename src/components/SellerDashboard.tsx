@@ -317,7 +317,7 @@ const SellerDashboard: React.FC<SellerDashboardProps> = ({ user, onLogout }) => 
         };
 
         // Save sale with warranty information
-        const result = await fetch('http://localhost:3001/api/sales-with-warranty', {
+        const result = await fetch('https://shop-inventory-api.onrender.com/api/sales-with-warranty', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

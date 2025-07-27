@@ -460,7 +460,7 @@ const getNetworkItems = () => {
                             {(() => {
                               const selectedBrand = brands.find(brand => brand.name === formData.brand);
                               const logoUrl = selectedBrand?.logoUrl || 
-                                            (selectedBrand?.logoFile ? `http://localhost:3001/uploads/logos/${selectedBrand.logoFile}` : null);
+                                            (selectedBrand?.logoFile ? `https://shop-inventory-api.onrender.com/uploads/logos/${selectedBrand.logoFile}` : null);
                               
                               return (
                                 <>
