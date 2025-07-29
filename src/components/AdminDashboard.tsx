@@ -150,6 +150,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
   const [showSaleDetailModal, setShowSaleDetailModal] = useState(false);
   const [salesRefreshCounter, setSalesRefreshCounter] = useState(0);
 
+  const API_BASE = 'https://shop-inventory-api.onrender.com/api';
+
   useEffect(() => {
     loadData();
     loadBrands();
@@ -377,7 +379,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
         };
 
         // Save sale with warranty information using the new API
-        const result = await fetch('https://shop-inventory-api.onrender.com/api/sales-with-warranty', {
+        const result = await fetch(`${API_BASE}/sales-with-warranty`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -585,7 +587,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
     { id: 'warranty', label: 'Warranty', icon: Shield },
     { id: 'categories', label: 'Categories', icon: Filter },
     { id: 'brands', label: 'Brands', icon: Building2 },
-    { id: 'basket', label: 'Basket', icon: ShoppingBag },
+    // Basket tab commented out as per original code
+    // { id: 'basket', label: 'Basket', icon: ShoppingBag },
     ...(user.role === 'admin' ? [
       { id: 'users', label: 'Users', icon: Users },
       { id: 'data-clear', label: 'Data Clear', icon: Trash2 }
@@ -1326,20 +1329,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           </div>
         )}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        {/* Other tabs content would go here... */}
+        {/* Purchases Tab */}
         {activeTab === 'purchases' && (
           <div>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
@@ -1487,6 +1477,20 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           onProcessReturn={handleReturnProcess}
         />
 
+        <SalesModal
+          isOpen={showSalesModal}
+          onClose={() => setShowSalesModal(false)}
+          salesItems={salesItems}
+          onRemoveItem={removeFromSale}
+          onCompleteSale={completeSale}
+        />
+
+        <ReturnModal
+          isOpen={showReturnModal}
+          onClose={() => setShowReturnModal(false)}
+          onProcessReturn={handleReturnProcess}
+        />
+
         <ReceiptModal
           isOpen={showReceiptModal}
           onClose={() => setShowReceiptModal(false)}
@@ -1519,6 +1523,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           product={isEditMode ? selectedProduct : null}
           onSave={isEditMode ? handleProductUpdate : handleProductAdd}
         />
+
+
+
+        {/* Basket Section */}
 
         {activeTab === 'data-clear' && user.role === 'admin' && (
           <div className="flex flex-col items-center justify-center min-h-[40vh]">
@@ -1632,21 +1640,58 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           </div>
         )}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/*  basket category item ad section */}
+{/* <AddItem /> */}
+
+
+
         {activeTab === 'basket' && (
           <div className="space-y-8">
             <h2 className="text-2xl font-bold text-white mb-4">Basket (Admin Cart)</h2>
             <div className="bg-white/10 backdrop-blur-xl border border-cyan-500/20 rounded-xl p-12 shadow-lg shadow-cyan-500/10">
-              {/* AddItem component for category input/output */}
               <div className="mb-8">
                 <p className="text-slate-300 text-lg mb-4">Add or select a category for admin actions below:</p>
-                <div className="max-w-lg mx-auto">
-                  {/* Import AddItem at the top of this file */}
+                <div className="max-w-lg mx-auto space-y-4">
+                  <label className="block text-white font-semibold mb-2">Select Category</label>
+                  <select
+                    value={selectedCategory}
+                    onChange={e => setSelectedCategory(e.target.value)}
+                    className="w-full px-4 py-2 rounded-lg bg-slate-800 text-white border border-cyan-400 mb-4"
+                  >
+                    <option value="">-- Select Category --</option>
+                    {categories.map(cat => (
+                      <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    ))}
+                  </select>
+                  {/* You can add more admin actions/components below */}
                   <AddItem />
                 </div>
               </div>
             </div>
           </div>
         )}
+
+
+
 
         {activeTab === 'users' && user.role === 'admin' && (
           <div className="space-y-8">
@@ -1666,8 +1711,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
             />
           </div>
         )}
-
-        {/* Categories Management */}
 
         {/* Sale Detail Modal */}
         <SaleDetailModal
@@ -1689,3 +1732,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
 };
 
 export default AdminDashboard;
+
+const fetchSalesData = async (): Promise<SaleRecord[]> => {
+  try {
+    const response = await fetch('https://shop-inventory-api.onrender.com/api/soldproducts');
+    const result = await response.json();
+    return Array.isArray(result.soldProducts) ? result.soldProducts : [];
+  } catch (error) {
+    console.error('Error fetching sales data:', error);
+    return [];
+  }
+};

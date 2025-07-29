@@ -9,14 +9,6 @@
     "id": "admin-1752640309387"
   },
   {
-    "name": "Md.Prannto Islam",
-    "email": "pranto@gmail.com",
-    "password": "pranto",
-    "role": "customer",
-    "points": 0,
-    "purchaseHistory": [],
-    "id": "admin-1752645271660"
-  },{
     "name": "admin",
     "email": "admin@gmail.com",
     "password": "admin",
