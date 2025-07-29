@@ -1534,7 +1534,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
               <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-red-400 mb-2">Danger Zone: Data Clear</h2>
               <p className="text-white mb-4">This will <strong>permanently delete</strong> all product, sales, brand, basket, revenue, purchase, inventory, and profit data. This action cannot be undone.</p>
-              <button
+                           <button
                 onClick={() => setShowDataClearModal(true)}
                 className="flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg shadow-red-500/25"
               >
