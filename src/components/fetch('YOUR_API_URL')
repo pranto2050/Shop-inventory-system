@@ -1,0 +1,8 @@
+fetch('YOUR_API_URL')
+  .then(response => response.json())
+  .then(data => {
+    // handle data
+  })
+  .catch(error => {
+    console.error('Fetch error:', error);
+  });

@@ -1,0 +1,5 @@
+fetch('/your/api/endpoint', {
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN_HERE'
+  }
+})

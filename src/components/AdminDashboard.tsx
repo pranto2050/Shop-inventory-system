@@ -598,14 +598,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-20 pb-8">
       <div className="container mx-auto px-4">
-        {/* Purchase History Modal */}
+        {/* Purchase History Modal */} 
         {showPurchaseHistoryModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
             <div className="bg-white/10 backdrop-blur-xl border border-cyan-500/20 rounded-2xl p-8 shadow-lg shadow-cyan-500/10 max-w-5xl w-full overflow-x-auto relative">
-              <button
-                onClick={() => setShowPurchaseHistoryModal(false)}
-                className="absolute top-4 right-4 p-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-lg border border-red-500/30 transition-all duration-300"
-              >
+              <button onClick={() => setShowPurchaseHistoryModal(false)} className="absolute top-4 right-4 p-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-lg border border-red-500/30 transition-all duration-300">
                 <X className="w-5 h-5" />
               </button>
               <h2 className="text-2xl font-bold text-white mb-6">Purchase History</h2>
@@ -1524,8 +1521,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           onSave={isEditMode ? handleProductUpdate : handleProductAdd}
         />
 
-
-
         {/* Basket Section */}
 
         {activeTab === 'data-clear' && user.role === 'admin' && (
@@ -1534,7 +1529,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
               <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-red-400 mb-2">Danger Zone: Data Clear</h2>
               <p className="text-white mb-4">This will <strong>permanently delete</strong> all product, sales, brand, basket, revenue, purchase, inventory, and profit data. This action cannot be undone.</p>
-                           <button
+                                                                  <button
                 onClick={() => setShowDataClearModal(true)}
                 className="flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg shadow-red-500/25"
               >
@@ -1640,26 +1635,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           </div>
         )}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{/*  basket category item ad section */}
+        {/*  basket category item ad section */}
 {/* <AddItem /> */}
 
 
@@ -1689,9 +1665,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
             </div>
           </div>
         )}
-
-
-
 
         {activeTab === 'users' && user.role === 'admin' && (
           <div className="space-y-8">

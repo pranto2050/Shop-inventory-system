@@ -348,9 +348,12 @@ const getNetworkItems = () => {
     onClose();
   };
 
+  //  Add New Product
+// Add a new product to inventory
   return (
-    <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-900/95 backdrop-blur-xl border border-cyan-500/20 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+    <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-[20px]">
+      {/* Remove Over flow */}
+      <div className="bg-slate-900/95 backdrop-blur-xl border border-cyan-500/20 rounded-2xl max-w-4xl w-full max-h-[90vh]  shadow-2xl"> 
         {/* Header */}
         <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border-b border-cyan-500/20 p-6">
           <div className="flex items-center justify-between">
@@ -377,14 +380,87 @@ const getNetworkItems = () => {
         </div>
 
         {/* Content */}
+        {/* Product Identification */}
         <div className="p-6 max-h-[70vh] overflow-y-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column */}
             <div className="space-y-6">
-              {/* Product Name Selection */}
-              <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/30 rounded-xl p-4">
+              {/* --- MOVE THIS BLOCK TO THE TOP --- */}
+              <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/30 rounded-xl p-4 z-0">
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center">
-                  <Search className="w-5 h-5 mr-2 text-cyan-400" />
+                  <Fingerprint className="w-5 h-5 mr-2 text-cyan-400" />
+                  Product Identification
+                </h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-slate-400 text-sm mb-2">Common ID (Group ID)</label>
+                    <input
+                      type="text"
+                      name="commonId"
+                      value={formData.commonId}
+                      onChange={handleInputChange}
+                      placeholder="e.g., CAM-1001"
+                      className={`w-full px-4 py-3 bg-white/10 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all ${
+                        commonIdValidation.isValid 
+                          ? 'border-white/20 focus:border-cyan-400/50' 
+                          : 'border-red-500/50 focus:border-red-500/50'
+                      }`}
+                      required
+                    />
+                    {!commonIdValidation.isValid && (
+                      <p className="text-red-400 text-xs mt-1">{commonIdValidation.message}</p>
+                    )}
+                    {commonIdValidation.isValid && formData.commonId && (
+                      <p className="text-green-400 text-xs mt-1">✓ {commonIdValidation.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 text-sm mb-2">Unique ID (Serial ID)</label>
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        name="uniqueId"
+                        value={formData.uniqueId}
+                        onChange={handleInputChange}
+                        placeholder="Auto-generated or manual entry"
+                        className={`flex-1 px-4 py-3 bg-white/10 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all ${
+                          uniqueIdValidation.isValid 
+                            ? 'border-white/20 focus:border-cyan-400/50' 
+                            : 'border-red-500/50 focus:border-red-500/50'
+                        }`}
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={generateNewUniqueId}
+                        className="px-3 py-3 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 rounded-lg border border-cyan-500/30 transition-all"
+                        title="Generate new Unique ID"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                    </div>
+                    {!uniqueIdValidation.isValid && (
+                      <p className="text-red-400 text-xs mt-1">{uniqueIdValidation.message}</p>
+                    )}
+                    {uniqueIdValidation.isValid && formData.uniqueId && (
+                      <p className="text-green-400 text-xs mt-1">✓ {uniqueIdValidation.message}</p>
+                    )}
+                  </div>
+
+                  <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+                    <p className="text-blue-400 text-xs">
+                      <strong>Note:</strong> Common ID groups identical products. Unique ID identifies each physical unit.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Product Name Selection */}
+              <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/30 rounded-xl p-4 z-40">
+                <h3 className="text-lg font-bold text-white mb-4 flex items-center">
+                  <Search className="w-5 h-5 mr-2 text-cyan-400 z-40" />
                   Product Name Selection
                 </h3>
                 
@@ -500,8 +576,8 @@ const getNetworkItems = () => {
                     </div>
                   )}
 
-                  <div className="relative">
-                    <label className="block text-slate-400 text-sm mb-2">Product Name</label>
+                  <div className="relative z-20">
+                    <label className="block text-slate-400 text-sm mb-2 z-40">Product Name</label>
                     <div className="relative">
                       <input
                         type="text"
@@ -511,15 +587,17 @@ const getNetworkItems = () => {
                         className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all"
                         required
                       />
+                      {/* search suggestion, product name */}
+
                       {showProductNameDropdown && existingProductNames.length > 0 && (
-                        <div className="absolute z-10 w-full mt-1 bg-slate-800 border border-slate-700 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                        <div className="absolute z-40 w-full mt-1 bg-slate-800 border border-slate-700 rounded-lg shadow-lg max-h-48 overflow-y-auto">
                           {existingProductNames
                             .filter(name => name.toLowerCase().includes(selectedProductName.toLowerCase()))
                             .map((name, index) => (
                               <button
                                 key={index}
                                 onClick={() => handleProductNameSelect(name)}
-                                className="w-full px-4 py-2 text-left text-white hover:bg-slate-700 transition-colors"
+                                className="w-full px-4 py-2 text-left text-white hover:bg-slate-700 transition-colors z-40"
                               >
                                 {name}
                               </button>
@@ -528,7 +606,7 @@ const getNetworkItems = () => {
                       )}
                     </div>
                     {formData.category && existingProductNames.length > 0 && (
-                      <p className="text-slate-400 text-xs mt-1">
+                      <p className="text-slate-400 text-xs mt-1 z-20">
                         Found {existingProductNames.length} existing products in {formData.category} category
                       </p>
                     )}
@@ -536,80 +614,8 @@ const getNetworkItems = () => {
                 </div>
               </div>
 
-              {/* Product Identification */}
-              <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/30 rounded-xl p-4">
-                <h3 className="text-lg font-bold text-white mb-4 flex items-center">
-                  <Fingerprint className="w-5 h-5 mr-2 text-cyan-400" />
-                  Product Identification
-                </h3>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-slate-400 text-sm mb-2">Common ID (Group ID)</label>
-                    <input
-                      type="text"
-                      name="commonId"
-                      value={formData.commonId}
-                      onChange={handleInputChange}
-                      placeholder="e.g., CAM-1001"
-                      className={`w-full px-4 py-3 bg-white/10 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all ${
-                        commonIdValidation.isValid 
-                          ? 'border-white/20 focus:border-cyan-400/50' 
-                          : 'border-red-500/50 focus:border-red-500/50'
-                      }`}
-                      required
-                    />
-                    {!commonIdValidation.isValid && (
-                      <p className="text-red-400 text-xs mt-1">{commonIdValidation.message}</p>
-                    )}
-                    {commonIdValidation.isValid && formData.commonId && (
-                      <p className="text-green-400 text-xs mt-1">✓ {commonIdValidation.message}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-slate-400 text-sm mb-2">Unique ID (Serial ID)</label>
-                    <div className="flex space-x-2">
-                      <input
-                        type="text"
-                        name="uniqueId"
-                        value={formData.uniqueId}
-                        onChange={handleInputChange}
-                        placeholder="Auto-generated or manual entry"
-                        className={`flex-1 px-4 py-3 bg-white/10 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all ${
-                          uniqueIdValidation.isValid 
-                            ? 'border-white/20 focus:border-cyan-400/50' 
-                            : 'border-red-500/50 focus:border-red-500/50'
-                        }`}
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={generateNewUniqueId}
-                        className="px-3 py-3 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 rounded-lg border border-cyan-500/30 transition-all"
-                        title="Generate new Unique ID"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </button>
-                    </div>
-                    {!uniqueIdValidation.isValid && (
-                      <p className="text-red-400 text-xs mt-1">{uniqueIdValidation.message}</p>
-                    )}
-                    {uniqueIdValidation.isValid && formData.uniqueId && (
-                      <p className="text-green-400 text-xs mt-1">✓ {uniqueIdValidation.message}</p>
-                    )}
-                  </div>
-
-                  <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
-                    <p className="text-blue-400 text-xs">
-                      <strong>Note:</strong> Common ID groups identical products. Unique ID identifies each physical unit.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
               {/* Basic Information */}
-              <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/30 rounded-xl p-4">
+              {/* <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/30 rounded-xl p-4"> */}
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center">
                   <Tag className="w-5 h-5 mr-2 text-cyan-400" />
                   Basic Information
@@ -641,7 +647,7 @@ const getNetworkItems = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              {/* </div> */}
 
               {/* Pricing & Stock */}
               <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/30 rounded-xl p-4">
@@ -809,7 +815,7 @@ const getNetworkItems = () => {
         </div>
 
         {/* Footer */}
-        <div className="bg-gradient-to-r from-slate-800/50 to-slate-900/50 border-t border-slate-700/30 p-6">
+        <div className="bg-gradient-to-r from-slate-800/50 to-slate-900/50 border-t border-slate-700/30 p-[20px]">
           <div className="flex items-center justify-end space-x-4">
             <button
               onClick={onClose}
