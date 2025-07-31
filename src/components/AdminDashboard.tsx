@@ -1008,6 +1008,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                 </div>
 
                 {/* Sales Items List */}
+                {/* Sales Management */}
                 <div className="space-y-4">
                   {salesItems.map((item) => (
                     <div

@@ -1,8 +1,8 @@
 [
   {
     "name": "a",
-    "email": "a@gmail.com",
-    "password": "a",
+    "email": "aa@gmail.com",
+    "password": "aa",
     "role": "seller",
     "points": 0,
     "purchaseHistory": [],
