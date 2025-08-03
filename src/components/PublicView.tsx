@@ -91,7 +91,7 @@ const PublicView: React.FC<PublicViewProps> = ({ currentSection }) => {
           
           // Price range filter
           if (filters.priceRange) {
-            if (product.pricePerUnit < filters.priceRange.min || product.pricePerUnit > filters.priceRange.max) return false;
+            if (product.sellpricePerUnit < filters.priceRange.min || product.sellpricePerUnit > filters.priceRange.max) return false;
           }
           
           // Availability filter

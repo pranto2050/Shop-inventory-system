@@ -37,7 +37,7 @@ const ReceiptButton: React.FC<ReceiptButtonProps> = ({
       productName: item.product.name,
       quantity: item.quantity,
       unit: item.product.unit,
-      pricePerUnit: item.product.pricePerUnit,
+      sellpricePerUnit: item.product.sellpricePerUnit,
       totalPrice: item.totalPrice
     })),
     totalAmount,

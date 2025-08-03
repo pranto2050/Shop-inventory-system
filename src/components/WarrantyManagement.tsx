@@ -10,7 +10,7 @@ interface WarrantyItem {
   customerId: string;
   customerEmail: string;
   quantity: number;
-  pricePerUnit: number;
+  sellpricePerUnit: number;
   totalPrice: number;
   dateOfSale: string;
   warrantyEndDate: string;
@@ -451,7 +451,7 @@ const WarrantyManagement: React.FC<WarrantyManagementProps> = ({ user }) => {
             productId: selectedSaleForDetails.productId,
             productName: selectedSaleForDetails.productName,
             quantity: selectedSaleForDetails.quantity,
-            pricePerUnit: selectedSaleForDetails.pricePerUnit,
+            sellpricePerUnit: selectedSaleForDetails.sellpricePerUnit,
             totalPrice: selectedSaleForDetails.totalPrice,
             unit: 'pcs', // Default unit if not available
             dateOfSale: selectedSaleForDetails.dateOfSale,

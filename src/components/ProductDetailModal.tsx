@@ -138,7 +138,7 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                   </div>
                 </div>
                 <div className="text-3xl font-bold text-cyan-400 mb-4">
-                  ৳{product.pricePerUnit.toLocaleString()}/{product.unit}
+                  ৳{product.sellpricePerUnit.toLocaleString()}/{product.unit}
                 </div>
               </div>
 

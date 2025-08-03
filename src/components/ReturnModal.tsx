@@ -129,7 +129,7 @@ const ReturnModal: React.FC<ReturnModalProps> = ({
     onClose();
   };
 
-  const totalRefund = product ? quantity * product.pricePerUnit : 0;
+  const totalRefund = product ? quantity * product.sellpricePerUnit : 0;
   // Calculate compensated refund
   const compensatedRefund = (() => {
     if (!isEditingComp && finalRefund !== null) return finalRefund;
@@ -184,7 +184,7 @@ const ReturnModal: React.FC<ReturnModalProps> = ({
                 <div className="flex-1">
                   <h3 className="text-white font-semibold">{product.name}</h3>
                   <p className="text-slate-400 text-sm">ID: {product.id}</p>
-                  <p className="text-orange-400 font-medium">৳{product.pricePerUnit}/{product.unit}</p>
+                  <p className="text-orange-400 font-medium">৳{product.sellpricePerUnit}/{product.unit}</p>
                   <p className="text-slate-500 text-sm">Current Stock: {product.stock} {product.unit}</p>
                   {maxPurchased !== null && (
                     <p className="text-green-400 text-sm mt-1">Purchased Quantity: {maxPurchased} {product.unit}</p>
@@ -235,7 +235,7 @@ const ReturnModal: React.FC<ReturnModalProps> = ({
                   </span>
                 </div>
                 <p className="text-slate-400 text-sm mt-2">
-                  {quantity} {product.unit} × ৳{product.pricePerUnit} = ৳{totalRefund.toFixed(2)}
+                  {quantity} {product.unit} × ৳{product.sellpricePerUnit} = ৳{totalRefund.toFixed(2)}
                 </p>
                 {isEditingComp && (
                   <div className="mt-4 flex items-center gap-3">

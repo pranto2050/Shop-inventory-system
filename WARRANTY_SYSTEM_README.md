@@ -68,7 +68,7 @@ The warranty management system has been fully implemented according to all requi
   "customerId": "admin-001",
   "customerEmail": "pranto@gmail.com",
   "quantity": 5,
-  "pricePerUnit": 3500,
+  "sellpricePerUnit": 3500,
   "totalPrice": 17500,
   "unit": "piece",
   "currency": "BDT",

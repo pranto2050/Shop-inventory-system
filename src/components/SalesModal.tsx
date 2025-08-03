@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Download, Trash2, ShoppingBag, Calendar, Shield, User } from 'lucide-react';
+import { X, Download, Trash2, ShoppingBag, Calendar, Shield, User, Loader2 } from 'lucide-react'; // Added Loader2 for loading indicator
 import { SaleItem, CustomerDetails } from '../types';
 import { downloadSalesData } from '../utils/storage';
 
@@ -8,7 +8,11 @@ interface SalesModalProps {
   onClose: () => void;
   salesItems: SaleItem[];
   onRemoveItem: (productId: string) => void;
-  onCompleteSale: (customDateTime?: string, warrantyInfo?: { dateOfSale: string; warrantyEndDate: string }, customerDetails?: CustomerDetails) => void;
+  // onCompleteSale is now called after the API request is handled internally
+  onCompleteSale: () => void; // Simplified as API call is now internal
+  // You might pass user info (e.g., loggedInUserEmail) as a prop if needed for 'soldBy'
+  loggedInUserEmail?: string;
+  loggedInUserName?: string;
 }
 
 const SalesModal: React.FC<SalesModalProps> = ({
@@ -16,11 +20,15 @@ const SalesModal: React.FC<SalesModalProps> = ({
   onClose,
   salesItems,
   onRemoveItem,
-  onCompleteSale
+  onCompleteSale,
+  loggedInUserEmail, // Added for soldBy info
+  loggedInUserName // Added for soldBy info
 }) => {
   const [customDateTime, setCustomDateTime] = useState('');
   const [useCustomDateTime, setUseCustomDateTime] = useState(false);
-  
+  const [isProcessingSale, setIsProcessingSale] = useState(false); // New loading state
+  const [saleMessage, setSaleMessage] = useState(''); // New state for success/error messages
+
   // Warranty fields
   const [dateOfSale, setDateOfSale] = useState(new Date().toISOString().split('T')[0]);
   const [warrantyPeriod, setWarrantyPeriod] = useState('1 year');
@@ -58,15 +66,45 @@ const SalesModal: React.FC<SalesModalProps> = ({
     setWarrantyPeriod('1 year');
     setCustomWarrantyEndDate('');
     setUseCustomWarrantyEnd(false);
+
+    setSaleMessage(''); // Clear any previous messages
   };
 
-  const handleCompleteSale = () => {
-    const dateTimeToUse = useCustomDateTime && customDateTime ? customDateTime : undefined;
+  // Test API endpoint availability
+  const testApiEndpoint = async () => {
+    try {
+      const response = await fetch('https://shop-inventory-api.onrender.com/api/sales', {
+        method: 'GET',
+      });
+      console.log('API health check:', response.status);
+      return response.ok;
+    } catch (error) {
+      console.log('API health check failed:', error);
+      return false;
+    }
+  };
+
+  const handleCompleteSale = async () => {
+    if (isProcessingSale) return; // Prevent double submission
+
+    if (!customerMobile.trim()) {
+      setSaleMessage('Error: Customer mobile number is required.');
+      return;
+    }
+    if (salesItems.length === 0) {
+      setSaleMessage('Error: No items in sale.');
+      return;
+    }
+
+    setIsProcessingSale(true);
+    setSaleMessage('Processing sale...');
+
+    const dateTimeToUse = useCustomDateTime && customDateTime ? customDateTime : new Date().toISOString();
     
     // Calculate warranty end date
-    let warrantyEndDate: string;
+    let calculatedWarrantyEndDate: string;
     if (useCustomWarrantyEnd && customWarrantyEndDate) {
-      warrantyEndDate = customWarrantyEndDate;
+      calculatedWarrantyEndDate = customWarrantyEndDate;
     } else {
       const saleDate = new Date(dateOfSale);
       const endDate = new Date(saleDate);
@@ -86,26 +124,130 @@ const SalesModal: React.FC<SalesModalProps> = ({
         endDate.setFullYear(endDate.getFullYear() + 1);
       }
       
-      warrantyEndDate = endDate.toISOString().split('T')[0];
+      calculatedWarrantyEndDate = endDate.toISOString().split('T')[0];
     }
     
-    const warrantyInfo = {
-      dateOfSale,
-      warrantyEndDate
-    };
-
-    // Prepare customer details if mobile number is provided (mobile is required)
-    const customerDetails: CustomerDetails | undefined = customerMobile.trim() ? {
-      name: customerName.trim() || 'Customer', // Default to 'Customer' if name is not provided
+    const customerDetails: CustomerDetails = {
+      name: customerName.trim() || 'Customer',
       mobile: customerMobile.trim(),
       email: customerEmail.trim(),
       address: customerAddress.trim()
-    } : undefined;
-    
-    onCompleteSale(dateTimeToUse, warrantyInfo, customerDetails);
-    
-    // Clear all form fields after completing the sale
-    clearAllFormFields();
+    };
+
+    // Construct the sale object to send to the backend
+    const saleObject = {
+      items: salesItems, // Array of SaleItem
+      totalAmount: totalAmount,
+      totalItems: totalItems,
+      dateOfSale: dateOfSale, // The date chosen for the sale
+      warrantyEndDate: calculatedWarrantyEndDate,
+      customerName: customerDetails.name,
+      customerMobile: customerDetails.mobile,
+      customerEmail: customerDetails.email,
+      customerAddress: customerDetails.address,
+      soldByEmail: loggedInUserEmail || 'unknown@example.com', // Placeholder, ideally from auth context
+      soldBy: loggedInUserName || 'Unknown User', // Placeholder, ideally from auth context
+      timestamp: dateTimeToUse, // Use the chosen or current timestamp
+    };
+
+    try {
+      console.log('Sending sale data:', saleObject); // Debug log
+      
+      // First, try to check if API is available
+      const isApiAvailable = await testApiEndpoint();
+      if (!isApiAvailable) {
+        console.warn('API appears to be unavailable, but proceeding with request...');
+      }
+      
+      const response = await fetch('https://shop-inventory-api.onrender.com/api/sales', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(saleObject),
+      });
+
+      console.log('Response status:', response.status); // Debug log
+      console.log('Response headers:', response.headers); // Debug log
+
+      if (!response.ok) {
+        // Try to get error message, but handle HTML responses
+        let errorMessage = `Server returned ${response.status}: ${response.statusText}`;
+        
+        try {
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorMessage;
+          } else {
+            // If it's HTML or other content, read as text
+            const errorText = await response.text();
+            console.log('Error response body:', errorText); // Debug log
+            errorMessage = `Server error: ${response.status} ${response.statusText}`;
+          }
+        } catch (parseError) {
+          console.log('Could not parse error response:', parseError);
+        }
+        
+        throw new Error(errorMessage);
+      }
+
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const responseText = await response.text();
+        console.log('Non-JSON response:', responseText);
+        throw new Error('Server returned non-JSON response');
+      }
+
+      const data = await response.json();
+      console.log('Sale recorded successfully:', data); // Debug log
+      
+      setSaleMessage(`Sale recorded successfully! Sale ID: ${data.saleId || 'Unknown'}`);
+      
+      // Call the parent's onCompleteSale to trigger dashboard refresh or cart clear
+      onCompleteSale(); 
+      onClose(); // Close the modal after successful completion
+      clearAllFormFields(); // Clear form fields
+      
+    } catch (error: any) {
+      console.error('Full error details:', error);
+      let errorMessage = 'Failed to record sale.';
+      
+      if (error.message) {
+        errorMessage = error.message;
+      } else if (error.name === 'TypeError' && error.message?.includes('fetch')) {
+        errorMessage = 'Network error: Could not connect to server. Please check your internet connection.';
+      }
+      
+      // As a fallback, try to store locally
+      try {
+        console.log('Attempting to store sale locally as fallback...');
+        
+        // Generate a local sale ID
+        const localSaleId = `LOCAL-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const saleWithId = { ...saleObject, saleId: localSaleId };
+        
+        // Store in localStorage as backup
+        const existingSales = JSON.parse(localStorage.getItem('pendingSales') || '[]');
+        existingSales.push(saleWithId);
+        localStorage.setItem('pendingSales', JSON.stringify(existingSales));
+        
+        setSaleMessage(`Sale stored locally! ID: ${localSaleId}. Will sync when server is available.`);
+        
+        // Still trigger the completion flow
+        onCompleteSale(); 
+        onClose();
+        clearAllFormFields();
+        
+      } catch (localError) {
+        console.error('Failed to store locally:', localError);
+        setSaleMessage(`Error: ${errorMessage}`);
+      }
+      
+    } finally {
+      setIsProcessingSale(false);
+    }
   };
 
   const getCurrentDateTime = () => {
@@ -160,15 +302,16 @@ const SalesModal: React.FC<SalesModalProps> = ({
                 >
                   <div className="flex items-center space-x-4">
                     <img
-                      src={item.product.image}
+                      src={item.product.image || `https://placehold.co/64x64/334155/E2E8F0?text=No+Image`}
                       alt={item.product.name}
                       className="w-16 h-16 object-cover rounded-lg"
+                      onError={(e) => { e.currentTarget.src = `https://placehold.co/64x64/334155/E2E8F0?text=No+Image`; }}
                     />
                     <div>
                       <h3 className="text-white font-semibold">{item.product.name}</h3>
                       <p className="text-slate-400 text-sm">ID: {item.product.id}</p>
                       <p className="text-emerald-400 text-sm">
-                        ৳{item.product.pricePerUnit}/{item.product.unit}
+                        ৳{item.product.sellpricePerUnit}/{item.product.unit}
                       </p>
                     </div>
                   </div>
@@ -376,6 +519,9 @@ const SalesModal: React.FC<SalesModalProps> = ({
                             } else if (warrantyPeriod.includes('year')) {
                               const years = parseInt(warrantyPeriod);
                               endDate.setFullYear(endDate.getFullYear() + years);
+                            } else if (warrantyPeriod.includes('day')) { // Added 'day' handling
+                              const days = parseInt(warrantyPeriod);
+                              endDate.setDate(endDate.getDate() + days);
                             }
                             return endDate.toLocaleDateString();
                           })()
@@ -392,6 +538,11 @@ const SalesModal: React.FC<SalesModalProps> = ({
         {/* Footer - Fixed at bottom */}
         {salesItems.length > 0 && (
           <div className="bg-white/5 border-t border-white/10 p-6 flex-shrink-0">
+            {saleMessage && (
+              <p className={`text-center mb-4 text-sm font-medium ${saleMessage.startsWith('Error') ? 'text-red-400' : 'text-emerald-400'}`}>
+                {saleMessage}
+              </p>
+            )}
             <div className="flex items-center justify-between mb-6">
               <div className="text-white">
                 <p className="text-lg">Total Items: <span className="font-bold">{totalItems}</span></p>
@@ -409,12 +560,25 @@ const SalesModal: React.FC<SalesModalProps> = ({
                 <Download className="w-5 h-5" />
                 <span>Download Receipt</span>
               </button>
+
+              {/* Debug button - remove in production */}
+              <button
+                onClick={async () => {
+                  const isAvailable = await testApiEndpoint();
+                  setSaleMessage(isAvailable ? 'API is available!' : 'API is not available!');
+                }}
+                className="flex items-center space-x-2 px-4 py-3 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 rounded-lg border border-yellow-500/30 transition-all duration-300"
+              >
+                <span>Test API</span>
+              </button>
               
               <button
                 onClick={handleCompleteSale}
-                className="flex-1 bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-slate-900 font-bold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-[1.02]"
+                className="flex-1 bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-slate-900 font-bold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center space-x-2"
+                disabled={isProcessingSale || salesItems.length === 0 || !customerMobile.trim()}
               >
-                Complete Sale
+                {isProcessingSale && <Loader2 className="animate-spin w-5 h-5" />}
+                <span>{isProcessingSale ? 'Processing...' : 'Complete Sale'}</span>
               </button>
             </div>
           </div>

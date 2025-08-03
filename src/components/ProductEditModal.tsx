@@ -25,23 +25,29 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
   product,
   onSave
 }) => {
+
   const [formData, setFormData] = useState<Product>({
-    id: '',
-    name: '',
-    brand: '',
-    supplier: '',
-    addedDate: '',
-    pricePerUnit: 0,
-    stock: 0,
-    unit: '',
-    category: '',
-    rating: 0,
-    image: '',
-    description: '',
-    specifications: {},
-    commonId: '',
-    uniqueId: ''
-  });
+  id: '',
+  name: '',
+  brand: '',
+  brandDescription: '',
+  brandLogo: '',
+  supplier: '',
+  addedDate: '',
+  buysellpricePerUnit: 0,
+  sellpricePerUnit: 0,
+  stock: 0,
+  unit: '',
+  category: '',
+  rating: 0,
+  image: '',
+  description: '',
+  specifications: {},
+  commonId: '',
+  uniqueId: '',
+  subcategory: '',
+  model: ''
+});
 
   const [specifications, setSpecifications] = useState<{ [key: string]: string }>({});
   const [newSpecKey, setNewSpecKey] = useState('');
@@ -196,24 +202,28 @@ const getNetworkItems = () => {
     } else if (isOpen && !product) {
       // Reset form for adding new product
       setFormData({
-        id: Date.now().toString(),
-        name: '',
-        brand: '',
-        brandDescription: '',
-        brandLogo: '',
-        supplier: '',
-        addedDate: new Date().toISOString().split('T')[0],
-        pricePerUnit: 0,
-        stock: 0,
-        unit: '',
-        category: '',
-        rating: 0,
-        image: '',
-        description: '',
-        specifications: {},
-        commonId: '',
-        uniqueId: ''
-      });
+  id: Date.now().toString(),
+  name: '',
+  brand: '',
+  brandDescription: '',
+  brandLogo: '',
+  supplier: '',
+  addedDate: new Date().toISOString().split('T')[0],
+  buysellpricePerUnit: 0,
+  sellpricePerUnit: 0,
+  stock: 0,
+  unit: '',
+  category: '',
+  rating: 0,
+  image: '',
+  description: '',
+  specifications: {},
+  commonId: '',
+  uniqueId: '',
+  subcategory: '',
+  model: ''
+});
+
       setSpecifications({});
       setSelectedProductName('');
       setCommonIdValidation({ isValid: true, message: '' });
@@ -227,7 +237,7 @@ const getNetworkItems = () => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'pricePerUnit' || name === 'stock' || name === 'rating' 
+      [name]: name === 'sellpricePerUnit' || name === 'stock' || name === 'rating' 
         ? parseFloat(value) || 0 
         : value
     }));
@@ -301,7 +311,7 @@ const getNetworkItems = () => {
       alert('Category is required');
       return;
     }
-    if (formData.pricePerUnit <= 0) {
+    if (formData.sellpricePerUnit <= 0) {
       alert('Price must be greater than 0');
       return;
     }
@@ -655,15 +665,29 @@ const getNetworkItems = () => {
                   <DollarSign className="w-5 h-5 mr-2 text-cyan-400" />
                   Pricing & Stock
                 </h3>
-                
+                {/* Buy Price per Unit  Add New Product*/}
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-slate-400 text-sm mb-2">Price per Unit (৳)</label>
+                      <label className="block text-slate-400 text-sm mb-2">Buy Price per Unit (৳)</label>
                       <input
                         type="number"
-                        name="pricePerUnit"
-                        value={formData.pricePerUnit}
+                        name="buysellpricePerUnit"
+                        value={formData.buysellpricePerUnit}
+                        onChange={handleInputChange}
+                        min="0"
+                        step="0.01"
+                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all"
+                        required
+                      />
+                    </div>
+                    {/* Sell Price per Unit */}
+                    <div>
+                      <label className="block text-slate-400 text-sm mb-2">Sell Price per Unit (৳)</label>
+                      <input
+                        type="number"
+                        name="sellpricePerUnit"
+                        value={formData.sellpricePerUnit}
                         onChange={handleInputChange}
                         min="0"
                         step="0.01"

@@ -166,8 +166,8 @@ export const filterProducts = async (filters: {
   return products.filter(product => {
     if (filters.category && product.category !== filters.category) return false;
     if (filters.brand && product.brand?.toLowerCase() !== filters.brand.toLowerCase()) return false;
-    if (filters.minPrice !== undefined && product.pricePerUnit < filters.minPrice) return false;
-    if (filters.maxPrice !== undefined && product.pricePerUnit > filters.maxPrice) return false;
+    if (filters.minPrice !== undefined && product.sellpricePerUnit < filters.minPrice) return false;
+    if (filters.maxPrice !== undefined && product.sellpricePerUnit > filters.maxPrice) return false;
     return true;
   });
 };

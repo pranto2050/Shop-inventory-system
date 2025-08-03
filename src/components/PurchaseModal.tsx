@@ -90,7 +90,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
                         <p className="text-slate-400 text-sm">ID: {item.product.id}</p>
                         <div className="flex items-center space-x-2 mt-1">
                           <span className="text-blue-400 text-sm">
-                            ₹{item.product.pricePerUnit}/{item.product.unit}
+                            ₹{item.product.sellpricePerUnit}/{item.product.unit}
                           </span>
                           {item.product.supplier && (
                             <span className="text-slate-500 text-xs bg-slate-700/50 px-2 py-1 rounded">
