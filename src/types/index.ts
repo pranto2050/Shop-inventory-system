@@ -8,29 +8,30 @@ export interface User {
   name: string;
 }
 
-export interface Product {
+export type Product = {
   id: string;
   name: string;
-  brand?: string;
-  brandDescription?: string; // Auto-populated from brand database
-  brandLogo?: string; // Auto-populated from brand database
-  supplier?: string;
-  addedDate: string;
-  pricePerUnit: number;
+  brand: string;
+  brandDescription: string;
+  brandLogo: string;
+  supplier: string;
+  addedDate: string; // ISO date string like "2025-07-30"
+  buysellpricePerUnit: number;
+  sellpricePerUnit: number;
   stock: number;
   unit: string;
   category: string;
-  subcategory?: string; // Added for filtering
-  networkItem?: string; // Network item type for network products
-  model?: string; // Added for filtering
   rating: number;
   image: string;
   description: string;
-  specifications?: { [key: string]: string };
-  // New fields for product identification
+  specifications: Record<string, any>; // or a more specific type if you know the structure
   commonId: string;
   uniqueId: string;
-}
+  subcategory: string;
+  model: string;
+};
+
+
 
 export interface Purchase {
   productId: string;
@@ -63,7 +64,7 @@ export interface SaleRecord {
   productID: string;
   productName: string;
   quantitySold: number;
-  pricePerUnit: number;
+  sellpricePerUnit: number;
   totalPrice: number;
   unit: string;
   timestamp: string;
@@ -88,7 +89,7 @@ export interface WarrantySaleRecord {
   customerId: string;
   customerEmail: string;
   quantity: number;
-  pricePerUnit: number;
+  sellpricePerUnit: number;
   totalPrice: number;
   unit: string;
   currency: string;
@@ -111,7 +112,7 @@ export interface WarrantyItem {
   customerId: string;
   customerEmail: string;
   quantity: number;
-  pricePerUnit: number;
+  sellpricePerUnit: number;
   totalPrice: number;
   dateOfSale: string;
   warrantyEndDate: string;
@@ -144,7 +145,7 @@ export interface PurchaseRecord {
   productID: string;
   productName: string;
   quantityAdded: number;
-  pricePerUnit: number;
+  sellpricePerUnit: number;
   totalCost: number;
   timestamp: string;
   adminId: string;
@@ -158,7 +159,7 @@ export interface ReturnRecord {
   productID: string;
   productName: string;
   quantityReturned: number;
-  pricePerUnit: number;
+  sellpricePerUnit: number;
   totalRefund: number;
   unit: string;
   timestamp: string;
@@ -223,7 +224,7 @@ export interface StockItem {
   commonId: string;
   uniqueId: string;
   productName: string;
-  pricePerUnit: number;
+  sellpricePerUnit: number;
   unit: string;
   addedDate: string;
   supplier?: string;

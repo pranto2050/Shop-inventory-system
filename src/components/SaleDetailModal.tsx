@@ -6,7 +6,7 @@ interface SaleItem {
   productId: string;
   productName: string;
   quantity: number;
-  pricePerUnit: number;
+  sellpricePerUnit: number;
   totalPrice: number;
   unit: string;
   dateOfSale: string;
@@ -28,7 +28,7 @@ interface Product {
   category?: string;
   subcategory?: string;
   model?: string;
-  pricePerUnit: number;
+  sellpricePerUnit: number;
   stock: number;
   unit: string;
 }
@@ -157,7 +157,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
                       </div>
                       <div>
                         <span className="text-slate-400 text-sm">Unit Price:</span>
-                        <p className="text-white">৳{saleItem.pricePerUnit.toFixed(2)}</p>
+                        <p className="text-white">৳{saleItem.sellpricePerUnit.toFixed(2)}</p>
                       </div>
                       <div>
                         <span className="text-slate-400 text-sm">Total Price:</span>

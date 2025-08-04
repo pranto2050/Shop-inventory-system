@@ -5,7 +5,7 @@ export interface ReceiptItem {
   productName: string;
   quantity: number;
   unit: string;
-  pricePerUnit: number;
+  sellpricePerUnit: number;
   totalPrice: number;
 }
 
@@ -189,7 +189,7 @@ export const generatePDFReceipt = (receiptData: ReceiptData): Promise<jsPDF> => 
       xPos += tableWidth * colWidths[1];
       
       // Unit price
-      doc.text(`৳${item.pricePerUnit.toLocaleString()}`, xPos, yPosition + 4);
+      doc.text(`৳${item.sellpricePerUnit.toLocaleString()}`, xPos, yPosition + 4);
       xPos += tableWidth * colWidths[2];
       
       // Total price

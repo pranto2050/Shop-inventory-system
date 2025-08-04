@@ -107,7 +107,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
     productId: string;
     productName: string;
     quantity: number;
-    pricePerUnit: number;
+    sellpricePerUnit: number;
     totalPrice: number;
     unit: string;
     dateOfSale: string;
@@ -135,7 +135,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
     productId: string;
     productName: string;
     quantity: number;
-    pricePerUnit: number;
+    sellpricePerUnit: number;
     totalPrice: number;
     unit: string;
     dateOfSale: string;
@@ -278,7 +278,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
   const handleQuantityConfirm = (quantity: number) => {
     if (!selectedProduct) return;
 
-    const totalPrice = quantity * selectedProduct.pricePerUnit;
+    const totalPrice = quantity * selectedProduct.sellpricePerUnit;
     const saleItem: SaleItem = {
       product: selectedProduct,
       quantity,
@@ -305,8 +305,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
   const handlePurchaseQuantityConfirm = (quantity: number, customPrice?: number) => {
     if (!selectedProduct) return;
 
-    const pricePerUnit = customPrice || selectedProduct.pricePerUnit;
-    const totalCost = quantity * pricePerUnit;
+    const sellpricePerUnit = customPrice || selectedProduct.sellpricePerUnit;
+    const totalCost = quantity * sellpricePerUnit;
     const purchaseItem: AdminPurchaseItem = {
       product: selectedProduct,
       quantity,
@@ -362,7 +362,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           customerMobile: customerDetails?.mobile || '',
           customerAddress: customerDetails?.address || '',
           quantity: item.quantity,
-          pricePerUnit: item.product.pricePerUnit,
+          sellpricePerUnit: item.product.sellpricePerUnit,
           totalPrice: item.totalPrice,
           unit: item.product.unit,
           currency: 'BDT',
@@ -416,7 +416,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           productID: item.product.id,
           productName: item.product.name,
           quantityAdded: item.quantity,
-          pricePerUnit: item.totalCost / item.quantity,
+          sellpricePerUnit: item.totalCost / item.quantity,
           totalCost: item.totalCost,
           timestamp: customDateTime || new Date().toISOString(),
           adminId: user.id,
@@ -448,8 +448,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
         productID: productId,
         productName: product.name,
         quantityReturned: quantity,
-        pricePerUnit: product.pricePerUnit,
-        totalRefund: quantity * product.pricePerUnit,
+        sellpricePerUnit: product.sellpricePerUnit,
+        totalRefund: quantity * product.sellpricePerUnit,
         unit: product.unit,
         timestamp: new Date().toISOString(),
         adminId: user.id,
@@ -530,7 +530,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
   const filteredProducts = products
     .filter(product =>
       (!selectedCategory || product.category === selectedCategory) &&
-      (!selectedSubcategory || product.subcategory === selectedSubcategory || product.networkItem === selectedSubcategory) &&
+      (!selectedSubcategory || product.subcategory === selectedSubcategory ) && // || product.networkItem === selectedSubcategory
       (!selectedBrand || product.brand === selectedBrand) &&
       (!selectedModel || product.model === selectedModel) &&
       (searchTerm.trim() === '' || 
@@ -550,9 +550,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
         case 'name-desc':
           return b.name.localeCompare(a.name);
         case 'price-asc':
-          return a.pricePerUnit - b.pricePerUnit;
+          return a.sellpricePerUnit - b.sellpricePerUnit;
         case 'price-desc':
-          return b.pricePerUnit - a.pricePerUnit;
+          return b.sellpricePerUnit - a.sellpricePerUnit;
         case 'stock-asc':
           return a.stock - b.stock;
         case 'stock-desc':
@@ -598,11 +598,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-20 pb-8">
       <div className="container mx-auto px-4">
-        {/* Purchase History Modal */} 
+        {/* Purchase History Modal */}
         {showPurchaseHistoryModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
             <div className="bg-white/10 backdrop-blur-xl border border-cyan-500/20 rounded-2xl p-8 shadow-lg shadow-cyan-500/10 max-w-5xl w-full overflow-x-auto relative">
-              <button onClick={() => setShowPurchaseHistoryModal(false)} className="absolute top-4 right-4 p-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-lg border border-red-500/30 transition-all duration-300">
+              <button
+                onClick={() => setShowPurchaseHistoryModal(false)}
+                className="absolute top-4 right-4 p-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-lg border border-red-500/30 transition-all duration-300"
+              >
                 <X className="w-5 h-5" />
               </button>
               <h2 className="text-2xl font-bold text-white mb-6">Purchase History</h2>
@@ -695,7 +698,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                               <td className="py-4 px-6 text-cyan-400 font-mono text-sm whitespace-nowrap">{purchase.productID}</td>
                               <td className="py-4 px-6 text-purple-400 font-mono text-sm whitespace-nowrap">{purchase.commonId || '-'}</td>
                               <td className="py-4 px-6 text-white whitespace-nowrap">{purchase.quantityAdded}</td>
-                              <td className="py-4 px-6 text-green-400 whitespace-nowrap">৳{purchase.pricePerUnit}</td>
+                              <td className="py-4 px-6 text-green-400 whitespace-nowrap">৳{purchase.sellpricePerUnit}</td>
                               <td className="py-4 px-6 text-green-400 font-bold whitespace-nowrap">৳{purchase.totalCost}</td>
                               <td className="py-4 px-6 text-slate-300 whitespace-nowrap">{new Date(purchase.timestamp).toLocaleDateString()}</td>
                             </tr>
@@ -878,6 +881,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
               </button>
             </div>
 
+
+            
+
             {/* Low Stock Alert */}
             {lowStockProducts.length > 0 && (
               <div className="bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 rounded-2xl p-6 shadow-lg shadow-red-500/10">
@@ -1008,7 +1014,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                 </div>
 
                 {/* Sales Items List */}
-                {/* Sales Management */}
                 <div className="space-y-4">
                   {salesItems.map((item) => (
                     <div
@@ -1032,7 +1037,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                               </div>
                               <div>
                                 <span className="text-slate-400">Price/Unit:</span>
-                                <p className="text-white">৳{item.product.pricePerUnit}</p>
+                                <p className="text-white">৳{item.product.sellpricePerUnit}</p>
                               </div>
                               <div>
                                 <span className="text-slate-400">Total:</span>
@@ -1227,7 +1232,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                               <span className="text-white whitespace-nowrap">{item.quantity} {item.unit}</span>
                             </td>
                             <td className="py-4 px-6 w-24 min-w-[90px]">
-                              <span className="text-slate-300 whitespace-nowrap">৳{item.pricePerUnit.toFixed(2)}</span>
+                              <span className="text-slate-300 whitespace-nowrap">৳{item.sellpricePerUnit.toFixed(2)}</span>
                             </td>
                             <td className="py-4 px-6 w-28 min-w-[100px]">
                               <span className="text-green-400 font-semibold whitespace-nowrap">৳{item.totalPrice.toFixed(2)}</span>
@@ -1399,7 +1404,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                               {item.quantity} {item.product.unit}
                             </p>
                             <p className="text-slate-300 text-sm">
-                              ${item.product.pricePerUnit} each
+                              ${item.product.sellpricePerUnit} each
                             </p>
                             <p className="text-green-400 font-bold">
                               Total: ${item.totalCost}
@@ -1522,6 +1527,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           onSave={isEditMode ? handleProductUpdate : handleProductAdd}
         />
 
+
+
         {/* Basket Section */}
 
         {activeTab === 'data-clear' && user.role === 'admin' && (
@@ -1530,7 +1537,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
               <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-red-400 mb-2">Danger Zone: Data Clear</h2>
               <p className="text-white mb-4">This will <strong>permanently delete</strong> all product, sales, brand, basket, revenue, purchase, inventory, and profit data. This action cannot be undone.</p>
-                                                                  <button
+                           <button
                 onClick={() => setShowDataClearModal(true)}
                 className="flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg shadow-red-500/25"
               >
@@ -1636,7 +1643,26 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           </div>
         )}
 
-        {/*  basket category item ad section */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/*  basket category item ad section */}
 {/* <AddItem /> */}
 
 
@@ -1666,6 +1692,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
             </div>
           </div>
         )}
+
+
+
 
         {activeTab === 'users' && user.role === 'admin' && (
           <div className="space-y-8">

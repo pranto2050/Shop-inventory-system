@@ -212,7 +212,7 @@ const SellerDashboard: React.FC<SellerDashboardProps> = ({ user, onLogout }) => 
   const handleQuantityConfirm = (quantity: number) => {
     if (!selectedProduct) return;
 
-    const totalPrice = quantity * selectedProduct.pricePerUnit;
+    const totalPrice = quantity * selectedProduct.sellpricePerUnit;
     const saleItem = {
       product: selectedProduct,
       quantity,
@@ -239,8 +239,8 @@ const SellerDashboard: React.FC<SellerDashboardProps> = ({ user, onLogout }) => 
   const handlePurchaseQuantityConfirm = (quantity: number, customPrice?: number) => {
     if (!selectedProduct) return;
 
-    const pricePerUnit = customPrice || selectedProduct.pricePerUnit;
-    const totalCost = quantity * pricePerUnit;
+    const sellpricePerUnit = customPrice || selectedProduct.sellpricePerUnit;
+    const totalCost = quantity * sellpricePerUnit;
     const purchaseItem = {
       product: selectedProduct,
       quantity,
@@ -292,7 +292,7 @@ const SellerDashboard: React.FC<SellerDashboardProps> = ({ user, onLogout }) => 
           customerId: user.id,
           customerEmail: user.email,
           quantity: item.quantity,
-          pricePerUnit: item.product.pricePerUnit,
+          sellpricePerUnit: item.product.sellpricePerUnit,
           totalPrice: item.totalPrice,
           unit: item.product.unit,
           currency: 'BDT',
@@ -372,9 +372,9 @@ const SellerDashboard: React.FC<SellerDashboardProps> = ({ user, onLogout }) => 
         case 'name-desc':
           return b.name.localeCompare(a.name);
         case 'price-asc':
-          return a.pricePerUnit - b.pricePerUnit;
+          return a.sellpricePerUnit - b.sellpricePerUnit;
         case 'price-desc':
-          return b.pricePerUnit - a.pricePerUnit;
+          return b.sellpricePerUnit - a.sellpricePerUnit;
         case 'stock-asc':
           return a.stock - b.stock;
         case 'stock-desc':
@@ -659,7 +659,7 @@ const SellerDashboard: React.FC<SellerDashboardProps> = ({ user, onLogout }) => 
                       <td className="py-3 px-4 text-slate-300">{product.category}</td>
                       <td className="py-3 px-4 text-slate-300">{product.brand}</td>
                       <td className="py-3 px-4 text-slate-300">{product.stock}</td>
-                      <td className="py-3 px-4 text-green-400 font-bold">৳{product.pricePerUnit}</td>
+                      <td className="py-3 px-4 text-green-400 font-bold">৳{product.sellpricePerUnit}</td>
                       <td className="py-3 px-4 text-slate-400 flex space-x-2">
                         <button
                           onClick={() => handleProductEdit(product)}
@@ -771,7 +771,7 @@ const SellerDashboard: React.FC<SellerDashboardProps> = ({ user, onLogout }) => 
                         <tr key={index} className="border-b border-slate-700/30">
                           <td className="py-2 px-4 text-white">{item.product.name}</td>
                           <td className="py-2 px-4 text-slate-300">{item.quantity}</td>
-                          <td className="py-2 px-4 text-slate-300">৳{item.product.pricePerUnit}</td>
+                          <td className="py-2 px-4 text-slate-300">৳{item.product.sellpricePerUnit}</td>
                           <td className="py-2 px-4 text-green-400 font-bold">৳{item.totalPrice}</td>
                           <td className="py-2 px-4 text-slate-400 flex space-x-2">
                             <button
@@ -802,7 +802,7 @@ const SellerDashboard: React.FC<SellerDashboardProps> = ({ user, onLogout }) => 
                         <Package className="w-6 h-6 text-slate-900" />
                       </div>
                       <div className="text-right">
-                        <div className="text-green-400 font-bold">৳{product.pricePerUnit}</div>
+                        <div className="text-green-400 font-bold">৳{product.sellpricePerUnit}</div>
                         <div className="text-slate-400 text-sm">Stock: {product.stock}</div>
                       </div>
                     </div>
@@ -860,7 +860,7 @@ const SellerDashboard: React.FC<SellerDashboardProps> = ({ user, onLogout }) => 
                       <tr key={index} className="border-b border-slate-700/30 hover:bg-white/5">
                         <td className="py-3 px-4 text-white">{sale.productName}</td>
                         <td className="py-3 px-4 text-slate-300">{sale.quantitySold}</td>
-                        <td className="py-3 px-4 text-slate-300">৳{sale.pricePerUnit}</td>
+                        <td className="py-3 px-4 text-slate-300">৳{sale.sellpricePerUnit}</td>
                         <td className="py-3 px-4 text-green-400 font-bold">৳{sale.totalPrice}</td>
                         <td className="py-3 px-4 text-slate-300">{new Date(sale.timestamp).toLocaleString()}</td>
                       </tr>
@@ -904,7 +904,7 @@ const SellerDashboard: React.FC<SellerDashboardProps> = ({ user, onLogout }) => 
                         <tr key={index} className="border-b border-slate-700/30">
                           <td className="py-2 px-4 text-white">{item.product.name}</td>
                           <td className="py-2 px-4 text-slate-300">{item.quantity}</td>
-                          <td className="py-2 px-4 text-slate-300">৳{item.product.pricePerUnit}</td>
+                          <td className="py-2 px-4 text-slate-300">৳{item.product.sellpricePerUnit}</td>
                           <td className="py-2 px-4 text-green-400 font-bold">৳{item.totalCost}</td>
                           <td className="py-2 px-4 text-slate-400 flex space-x-2">
                             <button
@@ -935,7 +935,7 @@ const SellerDashboard: React.FC<SellerDashboardProps> = ({ user, onLogout }) => 
                         <ShoppingBag className="w-6 h-6 text-slate-900" />
                       </div>
                       <div className="text-right">
-                        <div className="text-green-400 font-bold">৳{product.pricePerUnit}</div>
+                        <div className="text-green-400 font-bold">৳{product.sellpricePerUnit}</div>
                         <div className="text-slate-400 text-sm">Stock: {product.stock}</div>
                       </div>
                     </div>

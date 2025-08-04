@@ -180,7 +180,7 @@ interface SaleRecord {
   productId: string;
   productName: string;
   quantity: number;
-  pricePerUnit: number;
+  sellpricePerUnit: number;
   totalPrice: number;
   unit: string;
   dateOfSale: string;
@@ -261,7 +261,7 @@ const TodaysSalesDashboard: React.FC<TodaysSalesDashboardProps> = ({
     // Try local static import (works in Vite/CRA if file is in public/data)
     try {
       // @ts-ignore
-      const localData = await import('../../data/sales.json');
+      const localData = await import('https://shop-inventory-api.onrender.com/api/sales');
       if (Array.isArray(localData.default)) {
         return localData.default;
       }

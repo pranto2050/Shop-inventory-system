@@ -129,7 +129,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ onLogout }) => {
   const handleQuantityConfirm = (quantity: number) => {
     if (!selectedProduct) return;
 
-    const totalPrice = quantity * selectedProduct.pricePerUnit;
+    const totalPrice = quantity * selectedProduct.sellpricePerUnit;
     const saleItem: SaleItem = {
       product: selectedProduct,
       quantity,
@@ -174,7 +174,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ onLogout }) => {
         productID: item.product.id,
         productName: item.product.name,
         quantitySold: item.quantity,
-        pricePerUnit: item.product.pricePerUnit,
+        sellpricePerUnit: item.product.sellpricePerUnit,
         totalPrice: item.totalPrice,
         unit: item.product.unit,
         timestamp: new Date().toISOString(),
@@ -236,7 +236,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ onLogout }) => {
     let pointsEarned = 0;
 
     cart.forEach(item => {
-      const itemTotal = item.product.pricePerUnit * item.quantity;
+      const itemTotal = item.product.sellpricePerUnit * item.quantity;
       totalAmount += itemTotal;
       pointsEarned += Math.floor(itemTotal);
 
@@ -246,7 +246,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ onLogout }) => {
         productID: item.product.id,
         productName: item.product.name,
         quantitySold: item.quantity,
-        pricePerUnit: item.product.pricePerUnit,
+        sellpricePerUnit: item.product.sellpricePerUnit,
         totalPrice: itemTotal,
         unit: item.product.unit,
         timestamp: new Date().toISOString(),
@@ -267,9 +267,9 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ onLogout }) => {
           productId: item.product.id,
           productName: item.product.name,
           quantity: item.quantity,
-          price: item.product.pricePerUnit * item.quantity,
+          price: item.product.sellpricePerUnit * item.quantity,
           timestamp: new Date().toISOString(),
-          pointsEarned: Math.floor(item.product.pricePerUnit * item.quantity)
+          pointsEarned: Math.floor(item.product.sellpricePerUnit * item.quantity)
         }))
       ]
     };
@@ -287,7 +287,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ onLogout }) => {
     onLogout();
   };
 
-  const cartTotal = cart.reduce((sum, item) => sum + (item.product.pricePerUnit * item.quantity), 0);
+  const cartTotal = cart.reduce((sum, item) => sum + (item.product.sellpricePerUnit * item.quantity), 0);
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const handleSeeMore = (product: Product) => {
@@ -318,9 +318,9 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ onLogout }) => {
         case 'name-desc':
           return b.name.localeCompare(a.name);
         case 'price-asc':
-          return a.pricePerUnit - b.pricePerUnit;
+          return a.sellpricePerUnit - b.sellpricePerUnit;
         case 'price-desc':
-          return b.pricePerUnit - a.pricePerUnit;
+          return b.sellpricePerUnit - a.sellpricePerUnit;
         case 'stock-asc':
           return a.stock - b.stock;
         case 'stock-desc':
@@ -495,7 +495,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ onLogout }) => {
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-white">{item.product.name}</h3>
                       <p className="text-slate-400">ID: {item.product.id}</p>
-                      <p className="text-emerald-400 font-bold">৳{item.product.pricePerUnit}/{item.product.unit}</p>
+                      <p className="text-emerald-400 font-bold">৳{item.product.sellpricePerUnit}/{item.product.unit}</p>
                     </div>
                     <div className="flex items-center space-x-3">
                       <button
@@ -514,7 +514,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ onLogout }) => {
                       </button>
                     </div>
                     <div className="text-right">
-                      <p className="text-white font-bold">৳{(item.product.pricePerUnit * item.quantity).toFixed(2)}</p>
+                      <p className="text-white font-bold">৳{(item.product.sellpricePerUnit * item.quantity).toFixed(2)}</p>
                       <button
                         onClick={() => removeFromCart(item.product.id)}
                         className="text-red-400 hover:text-red-300 mt-2"

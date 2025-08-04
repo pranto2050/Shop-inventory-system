@@ -82,7 +82,7 @@ const initializeProducts = () => {
         brand: 'TP-Link',
         supplier: 'TP-Link Bangladesh',
         addedDate: '2024-01-15',
-        pricePerUnit: 3500,
+        sellpricePerUnit: 3500,
         stock: 25,
         unit: 'piece',
         category: 'Networking',
@@ -103,7 +103,7 @@ const initializeProducts = () => {
         brand: 'Western Digital',
         supplier: 'WD Bangladesh',
         addedDate: '2024-01-20',
-        pricePerUnit: 4200,
+        sellpricePerUnit: 4200,
         stock: 40,
         unit: 'piece',
         category: 'Storage',
@@ -124,7 +124,7 @@ const initializeProducts = () => {
         brand: 'ASUS',
         supplier: 'ASUS Bangladesh',
         addedDate: '2024-02-01',
-        pricePerUnit: 12500,
+        sellpricePerUnit: 12500,
         stock: 15,
         unit: 'piece',
         category: 'Monitors',
@@ -145,7 +145,7 @@ const initializeProducts = () => {
         brand: 'Seagate',
         supplier: 'Seagate Bangladesh',
         addedDate: '2024-02-05',
-        pricePerUnit: 3800,
+        sellpricePerUnit: 3800,
         stock: 30,
         unit: 'piece',
         category: 'Storage',
@@ -166,7 +166,7 @@ const initializeProducts = () => {
         brand: 'Logitech',
         supplier: 'Logitech Bangladesh',
         addedDate: '2024-02-10',
-        pricePerUnit: 4500,
+        sellpricePerUnit: 4500,
         stock: 20,
         unit: 'set',
         category: 'Accessories',
@@ -187,7 +187,7 @@ const initializeProducts = () => {
         brand: 'ASUS',
         supplier: 'ASUS Bangladesh',
         addedDate: '2024-02-15',
-        pricePerUnit: 45000,
+        sellpricePerUnit: 45000,
         stock: 8,
         unit: 'piece',
         category: 'Computing',
@@ -208,7 +208,7 @@ const initializeProducts = () => {
         brand: 'TP-Link',
         supplier: 'TP-Link Bangladesh',
         addedDate: '2024-02-20',
-        pricePerUnit: 1200,
+        sellpricePerUnit: 1200,
         stock: 35,
         unit: 'piece',
         category: 'Networking',
@@ -229,7 +229,7 @@ const initializeProducts = () => {
         brand: 'Corsair',
         supplier: 'Corsair Bangladesh',
         addedDate: '2024-02-25',
-        pricePerUnit: 2800,
+        sellpricePerUnit: 2800,
         stock: 50,
         unit: 'piece',
         category: 'Computing',
@@ -344,8 +344,8 @@ export const filterProducts = (filters: {
 
   if (filters.priceRange) {
     products = products.filter(p => 
-      p.pricePerUnit >= filters.priceRange!.min && 
-      p.pricePerUnit <= filters.priceRange!.max
+      p.sellpricePerUnit >= filters.priceRange!.min && 
+      p.sellpricePerUnit <= filters.priceRange!.max
     );
   }
 

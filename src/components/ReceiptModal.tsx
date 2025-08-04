@@ -40,7 +40,7 @@ const ReceiptModal: React.FC<ReceiptModalProps> = ({
       productName: item.product.name,
       quantity: item.quantity,
       unit: item.product.unit,
-      pricePerUnit: item.product.pricePerUnit,
+      sellpricePerUnit: item.product.sellpricePerUnit,
       totalPrice: item.totalPrice
     })) : [],
     totalAmount,
@@ -162,7 +162,7 @@ const ReceiptModal: React.FC<ReceiptModalProps> = ({
                     <div key={index} className="grid grid-cols-4 gap-2 text-sm text-white">
                       <span className="truncate">{item.product.name}</span>
                       <span>{item.quantity} {item.product.unit}</span>
-                      <span>৳{item.product.pricePerUnit}</span>
+                      <span>৳{item.product.sellpricePerUnit}</span>
                       <span className="text-right">৳{item.totalPrice.toFixed(2)}</span>
                     </div>
                   ))}
