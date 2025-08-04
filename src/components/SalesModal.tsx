@@ -70,20 +70,6 @@ const SalesModal: React.FC<SalesModalProps> = ({
     setSaleMessage(''); // Clear any previous messages
   };
 
-  // Test API endpoint availability
-  const testApiEndpoint = async () => {
-    try {
-      const response = await fetch('https://shop-inventory-api.onrender.com/api/sales', {
-        method: 'GET',
-      });
-      console.log('API health check:', response.status);
-      return response.ok;
-    } catch (error) {
-      console.log('API health check failed:', error);
-      return false;
-    }
-  };
-
   const handleCompleteSale = async () => {
     if (isProcessingSale) return; // Prevent double submission
 
@@ -150,16 +136,11 @@ const SalesModal: React.FC<SalesModalProps> = ({
       timestamp: dateTimeToUse, // Use the chosen or current timestamp
     };
 
+
+
+    
     try {
-      console.log('Sending sale data:', saleObject); // Debug log
-      
-      // First, try to check if API is available
-      const isApiAvailable = await testApiEndpoint();
-      if (!isApiAvailable) {
-        console.warn('API appears to be unavailable, but proceeding with request...');
-      }
-      
-      const response = await fetch('https://shop-inventory-api.onrender.com/api/sales', {
+      const response = await fetch('https://shop-inventory-api.onrender.com/api/sales-with-warranty', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -167,43 +148,14 @@ const SalesModal: React.FC<SalesModalProps> = ({
         body: JSON.stringify(saleObject),
       });
 
-      console.log('Response status:', response.status); // Debug log
-      console.log('Response headers:', response.headers); // Debug log
-
       if (!response.ok) {
-        // Try to get error message, but handle HTML responses
-        let errorMessage = `Server returned ${response.status}: ${response.statusText}`;
-        
-        try {
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            const errorData = await response.json();
-            errorMessage = errorData.message || errorMessage;
-          } else {
-            // If it's HTML or other content, read as text
-            const errorText = await response.text();
-            console.log('Error response body:', errorText); // Debug log
-            errorMessage = `Server error: ${response.status} ${response.statusText}`;
-          }
-        } catch (parseError) {
-          console.log('Could not parse error response:', parseError);
-        }
-        
-        throw new Error(errorMessage);
-      }
-
-      // Check if response is JSON
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const responseText = await response.text();
-        console.log('Non-JSON response:', responseText);
-        throw new Error('Server returned non-JSON response');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to record sale');
       }
 
       const data = await response.json();
-      console.log('Sale recorded successfully:', data); // Debug log
-      
-      setSaleMessage(`Sale recorded successfully! Sale ID: ${data.saleId || 'Unknown'}`);
+      setSaleMessage(`Sale recorded successfully! Sale ID: ${data.saleId}`);
+      console.log('Sale recorded successfully:', data);
       
       // Call the parent's onCompleteSale to trigger dashboard refresh or cart clear
       onCompleteSale(); 
@@ -211,40 +163,8 @@ const SalesModal: React.FC<SalesModalProps> = ({
       clearAllFormFields(); // Clear form fields
       
     } catch (error: any) {
-      console.error('Full error details:', error);
-      let errorMessage = 'Failed to record sale.';
-      
-      if (error.message) {
-        errorMessage = error.message;
-      } else if (error.name === 'TypeError' && error.message?.includes('fetch')) {
-        errorMessage = 'Network error: Could not connect to server. Please check your internet connection.';
-      }
-      
-      // As a fallback, try to store locally
-      try {
-        console.log('Attempting to store sale locally as fallback...');
-        
-        // Generate a local sale ID
-        const localSaleId = `LOCAL-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        const saleWithId = { ...saleObject, saleId: localSaleId };
-        
-        // Store in localStorage as backup
-        const existingSales = JSON.parse(localStorage.getItem('pendingSales') || '[]');
-        existingSales.push(saleWithId);
-        localStorage.setItem('pendingSales', JSON.stringify(existingSales));
-        
-        setSaleMessage(`Sale stored locally! ID: ${localSaleId}. Will sync when server is available.`);
-        
-        // Still trigger the completion flow
-        onCompleteSale(); 
-        onClose();
-        clearAllFormFields();
-        
-      } catch (localError) {
-        console.error('Failed to store locally:', localError);
-        setSaleMessage(`Error: ${errorMessage}`);
-      }
-      
+      setSaleMessage(`Error: ${error.message || 'Failed to record sale.'}`);
+      console.error('Error recording sale:', error);
     } finally {
       setIsProcessingSale(false);
     }
@@ -559,17 +479,6 @@ const SalesModal: React.FC<SalesModalProps> = ({
               >
                 <Download className="w-5 h-5" />
                 <span>Download Receipt</span>
-              </button>
-
-              {/* Debug button - remove in production */}
-              <button
-                onClick={async () => {
-                  const isAvailable = await testApiEndpoint();
-                  setSaleMessage(isAvailable ? 'API is available!' : 'API is not available!');
-                }}
-                className="flex items-center space-x-2 px-4 py-3 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 rounded-lg border border-yellow-500/30 transition-all duration-300"
-              >
-                <span>Test API</span>
               </button>
               
               <button

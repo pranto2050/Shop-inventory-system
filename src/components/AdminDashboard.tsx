@@ -27,7 +27,6 @@ import {
   getBrands
 } from '../utils/storage';
 import TodaysSalesDashboard from './TodaysSalesDashboard';
-import Profit from './Profit';
 import { 
   Monitor,
   LogOut,
@@ -392,7 +391,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           throw new Error('Failed to save sale with warranty');
         }
       }
-// Failed and to complete sale. Please try again. and Sale completed successfully 
+
       setCompletedSaleItems(itemsForReceipt);
       setSalesItems([]);
       setLastCustomerDetails(customerDetails || null);
@@ -400,10 +399,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
       setSalesRefreshCounter(prev => prev + 1); // Trigger refresh for TodaysSalesDashboard
       setShowSalesModal(false);
       setShowReceiptModal(true);
-// Sale completed successfully with warranty information!
       showNotification('Sale completed successfully with warranty information!');
     } catch (error) {
-      // Failed to complete sale. Please try again.
       console.error('Error completing sale:', error);
       showNotification('Failed to complete sale. Please try again.');
     }
@@ -884,12 +881,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
               </button>
             </div>
 
-            {/* Profit Analysis Section */}
-            <Profit soldProducts={soldProducts} products={products} />
 
-            {/* End Profit Section */}
+            
 
-            {/* Low Stock Products Section */}
             {/* Low Stock Alert */}
             {lowStockProducts.length > 0 && (
               <div className="bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 rounded-2xl p-6 shadow-lg shadow-red-500/10">
@@ -978,7 +972,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
         )}
 
         {/* Sales Tab */}
-        {/* Complete Sale Section */}
         {activeTab === 'sales' && (
           <div>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">

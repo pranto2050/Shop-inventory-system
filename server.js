@@ -363,6 +363,126 @@ app.post('/api/sales', async (req, res) => {
   }
 });
 
+// Add this new route for sales with warranty
+app.post('/api/sales-with-warranty', async (req, res) => {
+  try {
+    const {
+      items,
+      totalAmount,
+      totalItems,
+      dateOfSale,
+      warrantyEndDate,
+      customerName,
+      customerMobile,
+      customerEmail,
+      customerAddress,
+      soldByEmail,
+      soldBy,
+      timestamp
+    } = req.body;
+
+    // Validate required fields
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Items array is required and cannot be empty'
+      });
+    }
+
+    if (!customerMobile) {
+      return res.status(400).json({
+        success: false,
+        message: 'Customer mobile number is required'
+      });
+    }
+
+    // Read existing sales
+    const sales = await readJsonFile(FILES.sales);
+    
+    // Generate sale ID
+    const saleId = `sale-${Date.now()}`;
+    
+    // Create sales records for each item
+    const saleRecords = items.map(item => ({
+      saleId: saleId,
+      productId: item.product.id,
+      productName: item.product.name,
+      quantity: item.quantity,
+      sellpricePerUnit: item.product.sellpricePerUnit,
+      totalPrice: item.totalPrice,
+      dateOfSale: dateOfSale,
+      warrantyEndDate: warrantyEndDate,
+      customerName: customerName,
+      customerMobile: customerMobile,
+      customerEmail: customerEmail,
+      customerAddress: customerAddress,
+      soldByEmail: soldByEmail,
+      soldBy: soldBy,
+      timestamp: timestamp || new Date().toISOString(),
+      commonId: item.product.commonId,
+      uniqueId: item.product.uniqueId,
+      unit: item.product.unit,
+      currency: 'BDT'
+    }));
+
+    // Add all sale records to sales array
+    sales.push(...saleRecords);
+    
+    // Update product stock
+    const products = await readJsonFile(FILES.products);
+    let stockUpdateErrors = [];
+    
+    for (const item of items) {
+      const productIndex = products.findIndex(p => p.id === item.product.id);
+      if (productIndex !== -1) {
+        if (products[productIndex].stock >= item.quantity) {
+          products[productIndex].stock -= item.quantity;
+        } else {
+          stockUpdateErrors.push(`Insufficient stock for ${item.product.name}`);
+        }
+      } else {
+        stockUpdateErrors.push(`Product not found: ${item.product.name}`);
+      }
+    }
+    
+    // If there are stock errors, don't save the sale
+    if (stockUpdateErrors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Stock validation failed',
+        errors: stockUpdateErrors
+      });
+    }
+    
+    // Save updated data
+    const salesSaved = await writeJsonFile(FILES.sales, sales);
+    const productsSaved = await writeJsonFile(FILES.products, products);
+    
+    if (salesSaved && productsSaved) {
+      res.json({
+        success: true,
+        saleId: saleId,
+        message: 'Sale recorded successfully with warranty information',
+        totalAmount: totalAmount,
+        totalItems: totalItems,
+        itemsSold: items.length
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to save sale data'
+      });
+    }
+    
+  } catch (error) {
+    console.error('Sales with warranty error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while processing sale'
+    });
+  }
+});
+
 // Warranty Search API
 app.get('/api/warranty/search', async (req, res) => {
   try {
