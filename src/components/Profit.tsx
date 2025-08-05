@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, Download, X, DollarSign, Package, User, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import { TrendingUp, Download, X, DollarSign, Package, User, Phone, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ProfitItem {
   saleId: string;

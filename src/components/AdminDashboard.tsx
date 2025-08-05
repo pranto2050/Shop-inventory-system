@@ -64,6 +64,7 @@ import WarrantyManagement from './WarrantyManagement';
 import BrandManagement from './BrandManagement';
 import SaleDetailModal from './SaleDetailModal';
 import AddItem from './additem';
+import Profit from './Profit';
 
 interface AdminDashboardProps {
   user: UserType;
@@ -882,7 +883,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
             </div>
 
 
-            
+            {/* Profit Analysis */}
+            <div className="profit_section">
+              <Profit 
+                soldProducts={soldProducts} 
+                products={products}
+              />
+            </div>
 
             {/* Low Stock Alert */}
             {lowStockProducts.length > 0 && (
@@ -1527,8 +1534,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           onSave={isEditMode ? handleProductUpdate : handleProductAdd}
         />
 
-
-
         {/* Basket Section */}
 
         {activeTab === 'data-clear' && user.role === 'admin' && (
@@ -1643,26 +1648,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
           </div>
         )}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{/*  basket category item ad section */}
+        {/*  basket category item ad section */}
 {/* <AddItem /> */}
 
 
@@ -1692,9 +1678,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
             </div>
           </div>
         )}
-
-
-
 
         {activeTab === 'users' && user.role === 'admin' && (
           <div className="space-y-8">
